@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:warehouseapp/src/components/global_variable.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 
 class EmailTextField extends StatefulWidget {
@@ -22,33 +23,43 @@ class _EmailTextFieldState extends State<EmailTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
        controller: widget.controller,
-       style: kDefaultTextStyle(),
+       style: kDefaultTextStyle(
+          color: Colors.black,
+          fontSize: 16
+        ),
+       cursorColor: GlobalVariable.mainColor,
        decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: const TextStyle(color: Colors.white54),
+        hintStyle: const TextStyle(color: Colors.black45),
         filled: false,
-        prefixIcon: const Icon(Icons.email, color: Colors.white,),
-        suffix: AnimatedContainer(
-          duration: const Duration(milliseconds: 500), 
-          padding: const EdgeInsets.all(2),
-          decoration:  BoxDecoration(
-            color: isEmail == false ? Colors.white : Colors.green,
-            shape: BoxShape.circle),
-          child: isEmail == false ? const Icon(Icons.close, color: Colors.red, size: 16) : const Icon(Icons.done, color: Colors.green, size: 16),    
+        prefixIcon: const Icon(Icons.email, color: GlobalVariable.mainColor),
+        suffix: Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 500), 
+            padding: const EdgeInsets.all(2),
+            decoration: const BoxDecoration(
+              color: GlobalVariable.mainColor,
+              shape: BoxShape.circle),
+            child: isEmail == false ? const Icon(Icons.close, color: Colors.white, size: 16) : const Icon(Icons.done, color: Colors.white, size: 16),    
+          ),
         ),
         focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.white
+            color: GlobalVariable.mainColor,
+            width: 1.5
           )
         ),
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.white
+            color: GlobalVariable.mainColor,
+            width: 1.5
           )
         ),
         border: const UnderlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.white
+            color: GlobalVariable.mainColor,
+            width: 1.5
           )
         )
        ),

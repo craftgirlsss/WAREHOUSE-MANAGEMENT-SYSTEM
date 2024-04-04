@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
+import 'package:warehouseapp/src/components/buttons/default_button.dart';
+import 'package:warehouseapp/src/components/global_variable.dart';
+import 'package:warehouseapp/src/components/loadings/loading_page.dart';
 import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textfields/email_textfield.dart';
 import 'package:warehouseapp/src/components/textfields/password_textfield.dart';
@@ -35,46 +38,63 @@ class _LoginPageState extends State<LoginPage> {
     return Stack(
       children: [
         GestureDetector(
-          onTap: (){},
+          onTap: (){
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           child: Scaffold(
             body: Stack(
               children: [
                 backgroundColor(context),
                 Center(
-                  child: ClipRect(
-                    child:  BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                      child:  Container(
+                  child: Container(
                         padding: const EdgeInsets.all(30),
                         width: MediaQuery.of(context).size.width - 50,
-                        height: MediaQuery.of(context).size.height / 1.5,
+                        height: MediaQuery.of(context).size.height / 1.7,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade200.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(26),                    
+                          color: Colors.white.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(26),
+                          border: Border.all(color: Colors.black54, width: 0.7), 
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 2,
+                              color: Colors.black26,
+                              offset: Offset(0, 4)
+                            )
+                          ]                   
                         ),
                         child: Form(
                           child: Column(
                             children: [
-                              const FlutterLogo(size: 120),
+                              Image.asset("assets/icons/ic_launcher.png", width: 150),
                               const SizedBox(height: 30),
                               EmailTextField(
                                 controller: emailController,
-                                hintText: "Masukkan email anda",
+                                hintText: "Email",
                                 labelText: "E-mail",
                               ),
                               const SizedBox(height: 15),
                               PasswordTextField(
                                 controller: passwordController,
-                                hintText: "Masukkan password anda",
+                                hintText: "Password",
                                 labelText: "Kata Sandi",
+                              ),
+                              const SizedBox(height: 45),
+                              SizedBox(
+                                height: 55,
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                child: kDeafultButton(
+                                  backgroundColor: GlobalVariable.buttonColor,
+                                  onPressed: (){
+                                    Get.to(() => const LoadingPage());
+                                  },
+                                  title: "Login",
+                                ),
                               )
                             ],
                           ),
                         ),
                       ),
                     ),
-                  ),
-                )
               ],
             ),
           ),

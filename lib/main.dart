@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:warehouseapp/src/views/splashscreen/splashscreen.dart';
+import 'package:warehouseapp/src/views/splashscreen/splashscreen.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

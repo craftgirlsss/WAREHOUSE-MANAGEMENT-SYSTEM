@@ -9,9 +9,9 @@ Container backgroundColor(context){
         end: Alignment.bottomCenter,
         colors: [
           Colors.indigo.shade800,
+          Colors.indigo.shade700,
           Colors.indigo.shade600,
           Colors.indigo.shade400,
-          Colors.indigo.shade200,
         ],
       )
     ),
