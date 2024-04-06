@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
+import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/views/dashboard/homepage.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -10,15 +12,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int selectedIndex = 0;
-  static const List<Widget> widgetOptions = <Widget>[
+  String nameAppBar = 'Home';
+  static  List<Widget> widgetOptions = <Widget>[
+    const HomePage(),
     Text(
-      'Index 0: Home',
-    ),
-    Text(
-      'Index 1: Business',
-    ),
-    Text(
-      'Index 2: School',
+      'Home',
+      style: kDefaultTextStyle(color: Colors.green),
     ),
   ];
 
@@ -28,18 +27,26 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  @override
+  void initState() {
+    onItemTapped(0);
+    selectedIndex = 0;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: Text(nameAppBar, style: kDefaultTextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.indigo.shade800,
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
               icon: const Icon(
-                Icons.menu,
+                Icons.menu_rounded,
+                size: 40,
+                weight: 40,
                 color: Colors.white,
               ),
               onPressed: () {
@@ -51,41 +58,102 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       drawer: Drawer(
-        child: ListView(
-        // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
+        width: MediaQuery.of(context).size.width / 1.8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20)
+        ),
+        backgroundColor: Colors.indigo,
+        child: SafeArea(
+          child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 30),
+              title: Text('Back', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
-            child: Text('Drawer Header'),
-          ),
-          ListTile(
-            title: const Text('Item 1'),
-            onTap: () {
-              onItemTapped(0);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text('Item 2'),
-            onTap: () {
-              onItemTapped(1);
-              Navigator.pop(context);
-            },
-          ),
-        ],
+            ListTile(
+              leading: const Icon(Icons.home, color: Colors.white, size: 30),
+              title: Text('Home', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              onTap: () {
+                setState(() {
+                  onItemTapped(0);
+                  nameAppBar = "Home";
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 30),
+              title: Text('Item', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              onTap: () {
+                setState(() {
+                  onItemTapped(1);
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(CupertinoIcons.cube_box, color: Colors.white, size: 30),
+              title: Text('Sales Order', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              onTap: () {
+                setState(() {
+                  onItemTapped(1);
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.update, color: Colors.white, size: 30),
+              title: Text('Update', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              onTap: () {
+                setState(() {
+                  onItemTapped(1);
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(CupertinoIcons.barcode_viewfinder, color: Colors.white, size: 30),
+              title: Text('Tracking', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              onTap: () {
+                setState(() {
+                  onItemTapped(1);
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history, color: Colors.white, size: 30),
+              title: Text('History', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              onTap: () {
+                setState(() {
+                  onItemTapped(1);
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings, color: Colors.white, size: 30),
+              title: Text('Settings', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              onTap: () {
+                setState(() {
+                  onItemTapped(1);
+                  Navigator.pop(context);
+                });
+              },
+            ),
+          ],
+                ),
+        ),
       ),
-      ),
-      body: Stack(
-        children: [
-          backgroundColor(context),
+      body: 
           Center(
             child: widgetOptions[selectedIndex],
           )
-        ],
-      ),
     );
   }
 }
