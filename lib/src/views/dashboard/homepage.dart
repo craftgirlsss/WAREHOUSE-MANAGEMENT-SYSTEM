@@ -292,6 +292,7 @@ class _HomePageState extends State<HomePage> {
                   ), 
                   primaryYAxis: NumericAxis(
                     interval: 5,
+                    maximum: 23,
                     majorGridLines: const MajorGridLines(
                       color: Colors.black
                     ),

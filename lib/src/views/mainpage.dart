@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/helpers/functions/function_helper.dart';
 import 'package:warehouseapp/src/views/dashboard/homepage.dart';
+import 'package:warehouseapp/src/views/dashboard/update_stock.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -15,10 +17,11 @@ class _MainPageState extends State<MainPage> {
   String nameAppBar = 'Home';
   static  List<Widget> widgetOptions = <Widget>[
     const HomePage(),
-    Text(
-      'Home',
-      style: kDefaultTextStyle(color: Colors.green),
-    ),
+    const HomePage(),
+    const HomePage(),
+    const UpdateStockPage(),
+    const HomePage(),
+
   ];
 
   void onItemTapped(int index) {
@@ -40,6 +43,11 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text(nameAppBar, style: kDefaultTextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
         backgroundColor: Colors.indigo.shade800,
+        actions: [
+          selectedIndex == 3 ? TextButton(onPressed: (){
+            saveAddingStock();
+          }, child: Text("Save", style: kDefaultTextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),)) : const SizedBox()
+        ],
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -108,10 +116,11 @@ class _MainPageState extends State<MainPage> {
             ),
             ListTile(
               leading: const Icon(Icons.update, color: Colors.white, size: 30),
-              title: Text('Update', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              title: Text('Update Stock', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
                 setState(() {
-                  onItemTapped(1);
+                  nameAppBar = "Update Stock";
+                  onItemTapped(3);
                   Navigator.pop(context);
                 });
               },
