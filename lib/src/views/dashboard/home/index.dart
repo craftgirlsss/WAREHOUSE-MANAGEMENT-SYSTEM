@@ -5,7 +5,7 @@ import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/global_variable.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/models/data_chart_models.dart';
-import 'package:warehouseapp/src/views/dashboard/contacts.dart';
+import 'package:warehouseapp/src/views/dashboard/home/contacts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -316,7 +316,7 @@ class _HomePageState extends State<HomePage> {
                           yValueMapper: (ChartData data, _) => data.y1
                       ),
                   ]
-              )
+                )
               )
             ],
           ),

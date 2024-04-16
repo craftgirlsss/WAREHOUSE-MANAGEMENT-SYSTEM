@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/functions/function_helper.dart';
-import 'package:warehouseapp/src/views/dashboard/homepage.dart';
-import 'package:warehouseapp/src/views/dashboard/update_stock.dart';
+import 'package:warehouseapp/src/views/dashboard/home/index.dart';
+import 'package:warehouseapp/src/views/dashboard/item/index.dart';
+import 'package:warehouseapp/src/views/dashboard/update_stock/index.dart';
+
+import 'dashboard/item/add_item.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -17,7 +21,7 @@ class _MainPageState extends State<MainPage> {
   String nameAppBar = 'Home';
   static  List<Widget> widgetOptions = <Widget>[
     const HomePage(),
-    const HomePage(),
+    const ItemsPage(),
     const HomePage(),
     const UpdateStockPage(),
     const HomePage(),
@@ -44,9 +48,17 @@ class _MainPageState extends State<MainPage> {
         title: Text(nameAppBar, style: kDefaultTextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
         backgroundColor: Colors.indigo.shade800,
         actions: [
-          selectedIndex == 3 ? TextButton(onPressed: (){
-            saveAddingStock();
-          }, child: Text("Save", style: kDefaultTextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),)) : const SizedBox()
+          if(selectedIndex == 3)
+            TextButton(onPressed: (){
+              saveAddingStock();
+            }, 
+            child: Text("Save", style: kDefaultTextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),)) 
+          else if(selectedIndex == 1)
+            IconButton(onPressed: (){
+              Get.to(() => const AddItems());
+            }, icon: const Icon(Icons.add, color: Colors.white))
+          else 
+            const SizedBox()
         ],
         leading: Builder(
           builder: (BuildContext context) {
@@ -99,6 +111,7 @@ class _MainPageState extends State<MainPage> {
               title: Text('Item', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
                 setState(() {
+                  nameAppBar = "Items";
                   onItemTapped(1);
                   Navigator.pop(context);
                 });

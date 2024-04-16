@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 TextStyle kDefaultTextStyle({
   double? fontSize = 14,
-  FontWeight? fontWeight = FontWeight.normal,
+  FontWeight? fontWeight,
   Color? color = Colors.black
 }) => TextStyle(
   fontFamily: "",
   color: color,
-  fontWeight: fontWeight,
+  fontWeight: fontWeight ?? FontWeight.bold,
   fontSize: fontSize,
 );
