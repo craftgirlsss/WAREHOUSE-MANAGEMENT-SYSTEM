@@ -11,8 +11,9 @@ Widget floatingLoading() {
         children: [
           LoadingAnimationWidget.fourRotatingDots(
               color: Colors.white, size: 30),
+          const SizedBox(height: 5),
           DefaultTextStyle(
-              style: kDefaultTextStyle(), child: const Text("Loading..."))
+              style: kDefaultTextStyle(), child: Text("Loading...", style: kDefaultTextStyle(color: Colors.white),))
         ],
       ),
     ),

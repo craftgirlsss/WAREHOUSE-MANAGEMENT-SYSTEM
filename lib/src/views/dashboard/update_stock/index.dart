@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/global_variable.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
+
+import 'adding_contact_page.dart';
 
 class UpdateStockPage extends StatefulWidget {
   const UpdateStockPage({super.key});
@@ -42,7 +45,9 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                           label: Text("Contact Name", style: kDefaultTextStyle(fontSize: 16),),
                           labelStyle: kDefaultTextStyle(fontSize: 16),
                           suffixIcon: IconButton(
-                            onPressed: (){},
+                            onPressed: (){
+                              Get.to(() => const AddingContactPage());
+                            },
                             icon: const Icon(Icons.add),),
                             border: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.black))
