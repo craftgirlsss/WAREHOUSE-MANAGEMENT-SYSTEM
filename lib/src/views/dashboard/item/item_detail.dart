@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/currencies/format_currency.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
+import 'package:warehouseapp/src/views/dashboard/item/edit_item.dart';
 
 class ItemDetail extends StatefulWidget {
   final String? title;
@@ -54,7 +56,11 @@ class _ItemDetailState extends State<ItemDetail> {
               ),
                 actions: [
                   IconButton(onPressed: (){}, icon: const Icon(Icons.delete, color: Colors.white)),
-                  IconButton(onPressed: (){}, icon: const Icon(Icons.edit, color: Colors.white)),
+                  IconButton(onPressed: (){
+                    Get.to(() => EditItem(
+                      namaItem: widget.title,
+                    ));
+                  }, icon: const Icon(Icons.edit, color: Colors.white)),
                   IconButton(onPressed: (){}, icon: const Icon(Icons.more_vert_outlined, color: Colors.white)),
               ],
             ),

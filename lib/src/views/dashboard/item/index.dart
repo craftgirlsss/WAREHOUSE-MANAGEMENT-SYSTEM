@@ -48,7 +48,7 @@ class _ItemsPageState extends State<ItemsPage> {
                                 prefixIcon: const Icon(CupertinoIcons.search),
                                 hintStyle: kDefaultTextStyle(),                                
                                 filled: true,
-                                fillColor: Colors.white,
+                                fillColor: Colors.white60,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(25)
                                 )
@@ -91,7 +91,7 @@ class _ItemsPageState extends State<ItemsPage> {
                             side: const BorderSide(width: 0.2),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          tileColor: Colors.white,
+                          tileColor: Colors.white60,
                           leading: Container(
                             color: Colors.transparent,
                             width: 35,

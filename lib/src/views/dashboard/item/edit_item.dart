@@ -1,17 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
-class AddItems extends StatefulWidget {
-  const AddItems({super.key});
+class EditItem extends StatefulWidget {
+  final String? namaItem;
+  final String? skuItem;
+  final String? openingStockItem;
+  final String? namaPenerbitItem;
+  final String? categoryItem;
+  final String? hargaPenjualanItem;
+  final String? biayaItem;
+  const EditItem({super.key, this.namaItem, this.skuItem, this.openingStockItem, this.namaPenerbitItem, this.categoryItem, this.hargaPenjualanItem, this.biayaItem});
 
   @override
-  State<AddItems> createState() => _AddItemsState();
+  State<EditItem> createState() => _EditItemState();
 }
 
-class _AddItemsState extends State<AddItems> {
+class _EditItemState extends State<EditItem> {
   TextEditingController namaItemController = TextEditingController();
   TextEditingController skuItemController = TextEditingController();
   TextEditingController openingStockItemController = TextEditingController();
@@ -19,6 +25,18 @@ class _AddItemsState extends State<AddItems> {
   TextEditingController categoryItemController = TextEditingController();
   TextEditingController hargaPenjualanItemController = TextEditingController();
   TextEditingController biayaItemController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    namaItemController.text = widget.namaItem ?? 'Unknown';
+    skuItemController.text = widget.skuItem ?? 'Unknown';
+    openingStockItemController.text = widget.openingStockItem ?? 'Unknown';
+    namaPenerbitItemController.text = widget.namaPenerbitItem ?? 'Unknown';
+    categoryItemController.text = widget.categoryItem ?? 'Unknown';
+    hargaPenjualanItemController.text = widget.hargaPenjualanItem ?? 'Rp 0';
+    biayaItemController.text = widget.biayaItem ?? 'Rp 0';
+  }
 
   @override
   void dispose() {
@@ -42,7 +60,7 @@ class _AddItemsState extends State<AddItems> {
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               backgroundColor: Colors.indigo.shade800,
-              title: Text("Add Item", style: kDefaultTextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              title: Text("Edit Item", style: kDefaultTextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
               leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back_rounded,
@@ -63,41 +81,6 @@ class _AddItemsState extends State<AddItems> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 20),
-                  Center(
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(image: AssetImage('assets/images/empty_image.png'), fit: BoxFit.cover)
-                            ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: GestureDetector(
-                              onTap: (){
-                                print("Ditekan");
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle
-                                ),
-                                child: const Icon(CupertinoIcons.camera_fill, color: Colors.black54),
-                              ),
-                            ))
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
                   Container(
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
@@ -131,7 +114,7 @@ class _AddItemsState extends State<AddItems> {
                           ),
                         ),
                         TextField(
-                          controller: namaItemController,
+                          controller: categoryItemController,
                           readOnly: true,
                           onTap: (){},
                           decoration: InputDecoration(

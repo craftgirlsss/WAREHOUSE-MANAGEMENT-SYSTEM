@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
+import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:warehouseapp/src/components/appbars/default_appbar.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/global_variable.dart';
@@ -19,6 +18,9 @@ class _AddingContactPageState extends State<AddingContactPage> {
   TextEditingController contactNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
   String? datePicked;
+  Dataperson? dataperson = Dataperson.customer;
+  PhoneContact? phoneContact;
+  String? nameContact;
 
   @override
   void dispose() {
@@ -56,7 +58,14 @@ class _AddingContactPageState extends State<AddingContactPage> {
                           label: Text("Contact Name", style: kDefaultTextStyle(fontSize: 16),),
                           labelStyle: kDefaultTextStyle(fontSize: 16),
                           suffixIcon: IconButton(
-                            onPressed: (){},
+                            onPressed: () async {
+                              final PhoneContact contact = await FlutterContactPicker.pickPhoneContact();
+                                setState(() {
+                                  phoneContact = contact;
+                                  contactNumberController.text = phoneContact!.phoneNumber?.number ?? "Unknown number";
+                                  contactNameController.text = phoneContact?.fullName ?? 'Unknonwn name';
+                                });
+                            },
                             icon: const Icon(CupertinoIcons.person_2_square_stack),),
                             border: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.black))
@@ -72,9 +81,38 @@ class _AddingContactPageState extends State<AddingContactPage> {
                             borderSide: BorderSide(color: Colors.black))
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 18),
+                        child: Text("Contact Type", style: kDefaultTextStyle(fontSize: 16),),
+                      ),
                       Row(
                         children: [
-                          
+                          Expanded(
+                            child: RadioListTile<Dataperson>(
+                              contentPadding: const EdgeInsets.all(0),
+                              title: Text('Customer', style: kDefaultTextStyle(fontSize: 14),),
+                              groupValue: dataperson,
+                              value: Dataperson.customer,
+                              onChanged:(Dataperson? value) { 
+                                setState(() {
+                                  dataperson = value;
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioListTile<Dataperson>(
+                              contentPadding: const EdgeInsets.all(0),
+                              title: Text('Vendor', style: kDefaultTextStyle(fontSize: 14),),
+                              groupValue: dataperson,
+                              value: Dataperson.vendor,
+                              onChanged:(Dataperson? value) { 
+                                setState(() {
+                                  dataperson = value;
+                                });
+                              },
+                            ),
+                          ),
                         ],
                       )
                     ]
@@ -87,4 +125,9 @@ class _AddingContactPageState extends State<AddingContactPage> {
       ],
     );
   }
+}
+
+enum Dataperson{
+  customer,
+  vendor
 }

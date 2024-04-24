@@ -18,6 +18,7 @@ dependencies:
   syncfusion_flutter_charts: ^25.1.38
   supabase_flutter: ^2.5.1
   shared_preferences: ^2.2.3
+  fluttercontactpicker: ^5.0.0
 
 dev_dependencies:
   flutter_test:

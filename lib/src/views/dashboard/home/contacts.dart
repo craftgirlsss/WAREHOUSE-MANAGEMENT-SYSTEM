@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/global_variable.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
+
+import '../update_stock/adding_contact_page.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -39,7 +42,9 @@ class _ContactPageState extends State<ContactPage> {
                       tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                     ),
                       actions: [
-                        IconButton(onPressed: (){}, icon: const Icon(Icons.add, color: Colors.white))
+                        IconButton(onPressed: (){
+                          Get.to(() => const AddingContactPage());
+                        }, icon: const Icon(Icons.add, color: Colors.white))
                     ],
                     bottom: PreferredSize(
                       preferredSize: const Size.fromHeight(60), 

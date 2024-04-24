@@ -8,6 +8,7 @@ import 'package:warehouseapp/src/views/dashboard/item/index.dart';
 import 'package:warehouseapp/src/views/dashboard/update_stock/index.dart';
 
 import 'dashboard/item/add_item.dart';
+import 'dashboard/sales_order/index.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -22,7 +23,7 @@ class _MainPageState extends State<MainPage> {
   static  List<Widget> widgetOptions = <Widget>[
     const HomePage(),
     const ItemsPage(),
-    const HomePage(),
+    const SalesOrderPage(),
     const UpdateStockPage(),
     const HomePage(),
 
@@ -54,9 +55,19 @@ class _MainPageState extends State<MainPage> {
             }, 
             child: Text("Save", style: kDefaultTextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),)) 
           else if(selectedIndex == 1)
-            IconButton(onPressed: (){
-              Get.to(() => const AddItems());
-            }, icon: const Icon(Icons.add, color: Colors.white))
+            IconButton(
+              onPressed: (){
+                Get.to(() => const AddItems());
+              },
+              icon: const Icon(Icons.add, color: Colors.white),
+            )
+          else if(selectedIndex == 2)
+            IconButton(
+              onPressed: (){
+                // Get.to(() => const AddItems());
+              },
+              icon: const Icon(Icons.add, color: Colors.white),
+            )
           else 
             const SizedBox()
         ],
@@ -122,7 +133,8 @@ class _MainPageState extends State<MainPage> {
               title: Text('Sales Order', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
                 setState(() {
-                  onItemTapped(1);
+                  nameAppBar = "Sales Order";
+                  onItemTapped(2);
                   Navigator.pop(context);
                 });
               },

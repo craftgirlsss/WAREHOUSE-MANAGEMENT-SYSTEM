@@ -4,6 +4,9 @@ import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 ElevatedButton kDeafultButton({
   String? title,
   Function()? onPressed,
+  Color? textColor,
+  FontWeight? fontWeight,
+  double? fontSize,
   Color? backgroundColor = const Color.fromRGBO(128, 58, 217, 1)
 }) => ElevatedButton(
   onPressed: onPressed, 
@@ -13,4 +16,4 @@ ElevatedButton kDeafultButton({
     ),
     backgroundColor: backgroundColor,
   ),
-  child: Text(title ?? 'Submit', style: kDefaultTextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),));
+  child: Text(title ?? 'Submit', style: kDefaultTextStyle(fontSize: fontSize ?? 18, color: textColor ?? Colors.white, fontWeight: fontWeight ?? FontWeight.bold),));
