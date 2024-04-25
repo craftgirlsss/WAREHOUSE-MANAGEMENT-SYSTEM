@@ -9,6 +9,7 @@ import 'package:warehouseapp/src/views/dashboard/update_stock/index.dart';
 
 import 'dashboard/item/add_item.dart';
 import 'dashboard/sales_order/index.dart';
+import 'dashboard/settings/index.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -25,7 +26,7 @@ class _MainPageState extends State<MainPage> {
     const ItemsPage(),
     const SalesOrderPage(),
     const UpdateStockPage(),
-    const HomePage(),
+    const SettingsTab(),
 
   ];
 
@@ -155,6 +156,7 @@ class _MainPageState extends State<MainPage> {
               title: Text('Tracking', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
                 setState(() {
+                  nameAppBar = "Tracking";
                   onItemTapped(1);
                   Navigator.pop(context);
                 });
@@ -165,6 +167,7 @@ class _MainPageState extends State<MainPage> {
               title: Text('History', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
                 setState(() {
+                  nameAppBar = "History";
                   onItemTapped(1);
                   Navigator.pop(context);
                 });
@@ -175,7 +178,8 @@ class _MainPageState extends State<MainPage> {
               title: Text('Settings', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
                 setState(() {
-                  onItemTapped(1);
+                  nameAppBar = "Settings";
+                  onItemTapped(4);
                   Navigator.pop(context);
                 });
               },
