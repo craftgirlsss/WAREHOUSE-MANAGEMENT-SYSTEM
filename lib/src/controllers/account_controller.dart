@@ -10,7 +10,8 @@ class AccountController extends GetxController{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isLoading.value = true;
     try {
-      await Supabase.instance.client.auth.signInWithPassword(email: email, password: password!);
+     var result = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password!);
+      print(result);
       prefs.setBool('loggedIn', true);
       isLoading.value = false;
       return true;

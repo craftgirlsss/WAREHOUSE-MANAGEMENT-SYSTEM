@@ -7,6 +7,7 @@ import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 import '../update_stock/adding_contact_page.dart';
+import 'edit_contact.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -97,7 +98,13 @@ class _ContactPageState extends State<ContactPage> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
-                            onTap: (){},
+                            onTap: (){
+                              Get.to(() => const EditContactPage(
+                                contactName: "Arum Purwita Sari",
+                                contactNumber: "08139742394",
+                                contactType: ContactType.vendor,
+                              ));
+                            },
                             shape: RoundedRectangleBorder( //<-- SEE HERE
                               side: const BorderSide(width: 0.2),
                               borderRadius: BorderRadius.circular(10),

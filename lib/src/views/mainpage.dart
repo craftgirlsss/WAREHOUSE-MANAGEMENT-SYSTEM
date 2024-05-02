@@ -10,6 +10,7 @@ import 'package:warehouseapp/src/views/dashboard/update_stock/index.dart';
 import 'dashboard/item/add_item.dart';
 import 'dashboard/sales_order/index.dart';
 import 'dashboard/settings/index.dart';
+import 'dashboard/tracking/index.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -26,8 +27,8 @@ class _MainPageState extends State<MainPage> {
     const ItemsPage(),
     const SalesOrderPage(),
     const UpdateStockPage(),
+    const TrackingBarcode(),
     const SettingsTab(),
-
   ];
 
   void onItemTapped(int index) {
@@ -157,7 +158,7 @@ class _MainPageState extends State<MainPage> {
               onTap: () {
                 setState(() {
                   nameAppBar = "Tracking";
-                  onItemTapped(1);
+                  onItemTapped(4);
                   Navigator.pop(context);
                 });
               },
@@ -179,7 +180,7 @@ class _MainPageState extends State<MainPage> {
               onTap: () {
                 setState(() {
                   nameAppBar = "Settings";
-                  onItemTapped(4);
+                  onItemTapped(5);
                   Navigator.pop(context);
                 });
               },
