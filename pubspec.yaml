@@ -20,7 +20,7 @@ dependencies:
   shared_preferences: ^2.2.3
   fluttercontactpicker: ^5.0.0
   # barcode: ^2.2.8
-  barcode_scanner: ^4.2.0
+  flutter_barcode_scanner: ^2.0.0
 
 dev_dependencies:
   flutter_test:

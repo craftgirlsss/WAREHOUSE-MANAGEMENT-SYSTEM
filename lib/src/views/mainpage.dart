@@ -7,6 +7,7 @@ import 'package:warehouseapp/src/views/dashboard/home/index.dart';
 import 'package:warehouseapp/src/views/dashboard/item/index.dart';
 import 'package:warehouseapp/src/views/dashboard/update_stock/index.dart';
 
+import 'dashboard/history/index.dart';
 import 'dashboard/item/add_item.dart';
 import 'dashboard/sales_order/index.dart';
 import 'dashboard/settings/index.dart';
@@ -28,6 +29,7 @@ class _MainPageState extends State<MainPage> {
     const SalesOrderPage(),
     const UpdateStockPage(),
     const TrackingBarcode(),
+    const StockHistory(),
     const SettingsTab(),
   ];
 
@@ -70,6 +72,8 @@ class _MainPageState extends State<MainPage> {
               },
               icon: const Icon(Icons.add, color: Colors.white),
             )
+          else if(selectedIndex == 5)
+            IconButton(onPressed: (){}, icon: const Icon(Icons.filter_alt_rounded, color: Colors.white))
           else 
             const SizedBox()
         ],
@@ -168,8 +172,8 @@ class _MainPageState extends State<MainPage> {
               title: Text('History', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
                 setState(() {
-                  nameAppBar = "History";
-                  onItemTapped(1);
+                  nameAppBar = "Stock History";
+                  onItemTapped(5);
                   Navigator.pop(context);
                 });
               },
@@ -180,7 +184,7 @@ class _MainPageState extends State<MainPage> {
               onTap: () {
                 setState(() {
                   nameAppBar = "Settings";
-                  onItemTapped(5);
+                  onItemTapped(6);
                   Navigator.pop(context);
                 });
               },

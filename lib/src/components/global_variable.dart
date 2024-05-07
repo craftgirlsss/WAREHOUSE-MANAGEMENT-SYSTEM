@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:warehouseapp/src/views/dashboard/tracking/index.dart';
 
 class GlobalVariable{
   static const Color mainColor = Color.fromRGBO(128, 58, 217, 1);
@@ -12,4 +11,3 @@ enum ContactType{
 }
 
 bool shouldInitWithEncryption = false;
-BarcodeFormatsRepository barcodeFormatsRepository = BarcodeFormatsRepository();
