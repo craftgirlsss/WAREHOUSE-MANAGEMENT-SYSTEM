@@ -7,6 +7,8 @@ import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/models/data_chart_models.dart';
 import 'package:warehouseapp/src/views/dashboard/home/contacts.dart';
 
+import 'select_items.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -167,37 +169,40 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        color: Colors.white.withOpacity(0.7)
-                      ),
-                      child:  Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white38
+                    child: GestureDetector(
+                      onTap: () => Get.to(() => const SelectItems()),
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          color: Colors.white.withOpacity(0.7)
+                        ),
+                        child:  Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.white38
+                              ),
+                              child: const Icon(Icons.shopping_cart_outlined)),
+                            const SizedBox(width: 10),
+                            const Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("All Items"),
+                                Text("0")
+                              ],
                             ),
-                            child: const Icon(Icons.shopping_cart_outlined)),
-                          const SizedBox(width: 10),
-                          const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("All Items"),
-                              Text("0")
-                            ],
-                          ),
-                          const Flexible(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Icon(Icons.arrow_right),
-                            ),
-                          )
-                        ],
+                            const Flexible(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Icon(Icons.arrow_right),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

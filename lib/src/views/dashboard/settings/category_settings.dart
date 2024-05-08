@@ -6,6 +6,7 @@ import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 import '../update_stock/adding_contact_page.dart';
+import 'category_details.dart';
 
 class CategorySettings extends StatefulWidget {
   const CategorySettings({super.key});
@@ -76,7 +77,9 @@ class _CategorySettingsState extends State<CategorySettings> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
-                            onTap: (){},
+                            onTap: (){
+                              Get.to(() => const CategoryDetails());
+                            },
                             shape: RoundedRectangleBorder( //<-- SEE HERE
                               side: const BorderSide(width: 0.2),
                               borderRadius: BorderRadius.circular(10),

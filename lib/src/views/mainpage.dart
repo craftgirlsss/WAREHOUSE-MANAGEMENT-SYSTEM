@@ -5,6 +5,7 @@ import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/functions/function_helper.dart';
 import 'package:warehouseapp/src/views/dashboard/home/index.dart';
 import 'package:warehouseapp/src/views/dashboard/item/index.dart';
+import 'package:warehouseapp/src/views/dashboard/sales_order/add_new_customer.dart';
 import 'package:warehouseapp/src/views/dashboard/update_stock/index.dart';
 
 import 'dashboard/history/index.dart';
@@ -68,7 +69,7 @@ class _MainPageState extends State<MainPage> {
           else if(selectedIndex == 2)
             IconButton(
               onPressed: (){
-                // Get.to(() => const AddItems());
+                Get.to(() => const AddNewCustomer());
               },
               icon: const Icon(Icons.add, color: Colors.white),
             )
