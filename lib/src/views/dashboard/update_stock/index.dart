@@ -6,6 +6,7 @@ import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/global_variable.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
+import 'package:warehouseapp/src/views/dashboard/home/select_items.dart';
 
 import 'adding_contact_page.dart';
 
@@ -76,7 +77,9 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                 ),
                 const SizedBox(height: 15),
                 ListTile(
-                  onTap: (){},
+                  onTap: (){
+                    Get.to(() => const SelectItems());
+                  },
                   shape: RoundedRectangleBorder( //<-- SEE HERE
                     side: const BorderSide(width: 0.2),
                     borderRadius: BorderRadius.circular(13),

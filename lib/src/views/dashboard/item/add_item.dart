@@ -81,9 +81,7 @@ class _AddItemsState extends State<AddItems> {
                             right: 0,
                             bottom: 0,
                             child: GestureDetector(
-                              onTap: (){
-                                print("Ditekan");
-                              },
+                              onTap: (){},
                               child: Container(
                                 padding: const EdgeInsets.all(5),
                                 decoration: const BoxDecoration(
