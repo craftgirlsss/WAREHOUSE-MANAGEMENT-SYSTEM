@@ -114,6 +114,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
+              tileColor: selectedIndex == 0 ? Colors.white12 : Colors.transparent,
               leading: const Icon(Icons.home, color: Colors.white, size: 30),
               title: Text('Home', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
@@ -125,6 +126,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
+              tileColor: selectedIndex == 1 ? Colors.white12 : Colors.transparent,
               leading: const Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 30),
               title: Text('Item', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
@@ -136,6 +138,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
+              tileColor: selectedIndex == 2 ? Colors.white12 : Colors.transparent,
               leading: const Icon(CupertinoIcons.cube_box, color: Colors.white, size: 30),
               title: Text('Sales Order', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
@@ -147,6 +150,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
+              tileColor: selectedIndex == 3 ? Colors.white12 : Colors.transparent,
               leading: const Icon(Icons.update, color: Colors.white, size: 30),
               title: Text('Update Stock', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
@@ -158,6 +162,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
+              tileColor: selectedIndex == 4 ? Colors.white12 : Colors.transparent,
               leading: const Icon(CupertinoIcons.barcode_viewfinder, color: Colors.white, size: 30),
               title: Text('Tracking', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
@@ -169,6 +174,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
+              tileColor: selectedIndex == 5 ? Colors.white12 : Colors.transparent,
               leading: const Icon(Icons.history, color: Colors.white, size: 30),
               title: Text('History', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
@@ -180,6 +186,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
+              tileColor: selectedIndex == 6 ? Colors.white12 : Colors.transparent,
               leading: const Icon(Icons.settings, color: Colors.white, size: 30),
               title: Text('Settings', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {

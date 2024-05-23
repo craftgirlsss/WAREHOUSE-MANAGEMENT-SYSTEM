@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +9,8 @@ import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 import 'package:warehouseapp/src/views/dashboard/item/edit_item.dart';
 
 class ItemDetail extends StatefulWidget {
+  final int? id;
+  final int? idCategory;
   final String? title;
   final int? stockLength;
   final String? category;
@@ -17,7 +18,7 @@ class ItemDetail extends StatefulWidget {
   final double? costPrice;
   final String? sku;
   final String? penerbit;
-  const ItemDetail({super.key, this.title, this.stockLength, this.category, this.sellingPrice, this.costPrice, this.sku, this.penerbit});
+  const ItemDetail({super.key, this.title, this.stockLength, this.category, this.sellingPrice, this.costPrice, this.sku, this.penerbit, this.idCategory, this.id});
 
   @override
   State<ItemDetail> createState() => _ItemDetailState();
@@ -62,6 +63,8 @@ class _ItemDetailState extends State<ItemDetail> {
                   IconButton(onPressed: (){}, icon: const Icon(Icons.delete, color: Colors.white)),
                   IconButton(onPressed: (){
                     Get.to(() => EditItem(
+                      id: widget.id,
+                      idCategory: widget.idCategory,
                       biayaItem: widget.costPrice,
                       categoryItem: widget.category,
                       hargaPenjualanItem: widget.sellingPrice,

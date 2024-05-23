@@ -77,6 +77,40 @@ class ProductControllers extends GetxController {
     return false;
   }
 
+  Future<bool> editProductItems({
+    String? namaItem,
+    String? sku,
+    int? hargaPenjaualan,
+    int? openingStock,
+    String? namaPenerbitItem,
+    int? category,
+    int? id
+  }) async {
+    isLoading.value = true;
+    try {
+      List result = await vars.client
+          .from('item')
+          .update({
+            'nama': namaItem,
+            'sku' : sku,
+            'stock_awal' : openingStock,
+            'penerbit' : namaPenerbitItem,
+            'kategori_id' : category,
+            'harga_jual' : hargaPenjaualan
+          })
+          .eq('id', id!)
+          .select();
+      print(result);
+      isLoading.value = false;
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+    }
+    isLoading.value = false;
+    return false;
+  }
+
   purchasedQuantities() async {
     isLoading.value = true;
     try {

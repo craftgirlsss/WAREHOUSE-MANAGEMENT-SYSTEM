@@ -113,9 +113,11 @@ class _ItemsPageState extends State<ItemsPage> {
                           child: ListTile(
                               onTap: (){
                                 Get.to(() => ItemDetail(
+                                  id: productControllers.productModels[index].id,
+                                  idCategory: productControllers.productModels[index].toko?.id,
                                   penerbit: productControllers.productModels[index].penerbit,
                                   sellingPrice: productControllers.productModels[index].hargaJual,
-                                  costPrice: ((productControllers.productModels[index].hargaJual! - productControllers.productModels[index].hargaBeli!) * 0.15),
+                                  costPrice: productControllers.productModels[index].hargaJual != null && productControllers.productModels[index].hargaBeli != null ? ((productControllers.productModels[index].hargaJual! - productControllers.productModels[index].hargaBeli!) * 0.15) : 0,
                                   sku: productControllers.productModels[index].sku,
                                   stockLength: productControllers.productModels[index].stockAwal,
                                   title: productControllers.productModels[index].nama,
