@@ -13,7 +13,11 @@ class ItemDetail extends StatefulWidget {
   final String? title;
   final int? stockLength;
   final String? category;
-  const ItemDetail({super.key, this.title, this.stockLength, this.category});
+  final int? sellingPrice;
+  final double? costPrice;
+  final String? sku;
+  final String? penerbit;
+  const ItemDetail({super.key, this.title, this.stockLength, this.category, this.sellingPrice, this.costPrice, this.sku, this.penerbit});
 
   @override
   State<ItemDetail> createState() => _ItemDetailState();
@@ -58,7 +62,13 @@ class _ItemDetailState extends State<ItemDetail> {
                   IconButton(onPressed: (){}, icon: const Icon(Icons.delete, color: Colors.white)),
                   IconButton(onPressed: (){
                     Get.to(() => EditItem(
+                      biayaItem: widget.costPrice,
+                      categoryItem: widget.category,
+                      hargaPenjualanItem: widget.sellingPrice,
                       namaItem: widget.title,
+                      namaPenerbitItem: widget.penerbit ?? 'Unknown',
+                      openingStockItem: widget.stockLength,
+                      skuItem: widget.sku,
                     ));
                   }, icon: const Icon(Icons.edit, color: Colors.white)),
                   IconButton(onPressed: (){}, icon: const Icon(Icons.more_vert_outlined, color: Colors.white)),
@@ -81,7 +91,7 @@ class _ItemDetailState extends State<ItemDetail> {
                       height: 35,
                       child: const Icon(Icons.image_outlined, color: Colors.black87, size: 40,)
                     ),
-                    title: Text(widget.title ?? "Unknown", overflow: TextOverflow.ellipsis, style: kDefaultTextStyle(fontWeight: FontWeight.bold,fontSize: 13),),
+                    title: Text(widget.title ?? "Unknown", overflow: TextOverflow.ellipsis, style: kDefaultTextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
                     subtitle: Text("Available Stock : ${widget.stockLength ?? 0}")
                   ),
                   const SizedBox(height: 10),
@@ -97,7 +107,7 @@ class _ItemDetailState extends State<ItemDetail> {
                       children: [
                         Text("Category : ${widget.category ?? "Unknown"}"),
                         const Text("Reorder Point : 2"),
-                        const Text("SKU# : DH37KDB"),
+                        Text("SKU# : ${widget.sku}"),
                       ],
                     ),
                   ),
@@ -112,9 +122,9 @@ class _ItemDetailState extends State<ItemDetail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Selling Price : ${formatCurrencyId.format(18000)}"),
+                        Text("Selling Price : ${formatCurrencyId.format(widget.sellingPrice ?? 0)}"),
                         const SizedBox(height: 5),
-                        Text("Cost Price : ${formatCurrencyId.format(50000)}"),
+                        Text("Cost Price : ${formatCurrencyId.format(widget.costPrice ?? 0)}"),
                       ],
                     ),
                   ),
@@ -155,15 +165,15 @@ class _ItemDetailState extends State<ItemDetail> {
                       ]
                     )
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: ElevatedButton.icon(onPressed: (){}, icon: const Icon(CupertinoIcons.arrow_2_circlepath), label: const Text("Update Stock")),
-                      )
-                    ],
-                  )
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     Padding(
+                  //       padding: const EdgeInsets.only(top: 10),
+                  //       child: ElevatedButton.icon(onPressed: (){}, icon: const Icon(CupertinoIcons.arrow_2_circlepath), label: const Text("Update Stock")),
+                  //     )
+                  //   ],
+                  // )
                 ],
               ),
             ),

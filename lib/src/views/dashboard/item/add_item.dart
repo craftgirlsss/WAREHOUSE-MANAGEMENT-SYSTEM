@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
+import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 class AddItems extends StatefulWidget {
@@ -12,6 +15,7 @@ class AddItems extends StatefulWidget {
 }
 
 class _AddItemsState extends State<AddItems> {
+  ProductControllers productControllers = Get.find();
   TextEditingController namaItemController = TextEditingController();
   TextEditingController skuItemController = TextEditingController();
   TextEditingController openingStockItemController = TextEditingController();
@@ -19,6 +23,9 @@ class _AddItemsState extends State<AddItems> {
   TextEditingController categoryItemController = TextEditingController();
   TextEditingController hargaPenjualanItemController = TextEditingController();
   TextEditingController biayaItemController = TextEditingController();
+  TextEditingController hargaBeliItemController = TextEditingController();
+  TextEditingController stockMinimal = TextEditingController();
+  int? categorySelected;
 
   @override
   void dispose() {
@@ -55,7 +62,38 @@ class _AddItemsState extends State<AddItems> {
                 tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               ),
                 actions: [
-                  TextButton(onPressed: (){}, child: Text("Save", style: kDefaultTextStyle(color: Colors.white),))
+                  TextButton(
+                    onPressed: () async {
+                      if(namaItemController.text.isEmpty 
+                      || categoryItemController.text.isEmpty
+                      || hargaPenjualanItemController.text.isEmpty
+                      || namaPenerbitItemController.text.isEmpty
+                      || openingStockItemController.text.isEmpty
+                      || namaPenerbitItemController.text.isEmpty
+                      || skuItemController.text.isEmpty
+                      || hargaBeliItemController.text.isEmpty
+                      || stockMinimal.text.isEmpty
+                      ){
+                        Get.snackbar("Gagal", "Mohon isi semua field yang tersedia", backgroundColor: Colors.white);
+                      }else{
+                        if(await productControllers.addProductItems(
+                          category: categorySelected,
+                          hargaPenjaualan: int.parse(hargaPenjualanItemController.text),
+                          namaItem: namaItemController.text,
+                          namaPenerbitItem: namaPenerbitItemController.text,
+                          openingStock: int.parse(openingStockItemController.text),
+                          penerbit: namaPenerbitItemController.text,
+                          sku: skuItemController.text
+                        )){
+                          Get.snackbar("Berhasil", "Berhasil menambah item", backgroundColor: Colors.white);
+                          Future.delayed(const Duration(seconds: 1), (){
+                            productControllers.fetchProductItems();
+                            Navigator.pop(context);
+                          });
+                        }
+                      }
+                  },
+                  child: Text("Save", style: kDefaultTextStyle(color: Colors.white),))
               ],
             ),
             body: SingleChildScrollView(
@@ -117,6 +155,7 @@ class _AddItemsState extends State<AddItems> {
                           ),
                         ),
                         TextField(
+                          keyboardType: TextInputType.number,
                           controller: openingStockItemController,
                           decoration: const InputDecoration(
                             label: Text("Opening Stock"),
@@ -129,9 +168,58 @@ class _AddItemsState extends State<AddItems> {
                           ),
                         ),
                         TextField(
-                          controller: namaItemController,
+                          controller: categoryItemController,
                           readOnly: true,
-                          onTap: (){},
+                          onTap: (){
+                            productControllers.getCategoryItem();
+                            Get.defaultDialog(
+                              backgroundColor: Colors.white,
+                              title: "Daftar Kategori",
+                              titleStyle: kDefaultTextStyle(color: Colors.black, fontSize: 16),
+                              titlePadding: const EdgeInsets.only(top: 15),
+                              content: Obx(
+                                () => productControllers.isLoading.value ? Center(
+                                  child: floatingLoading(),
+                                ) : productControllers.categoryModels.length == 0 ? Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(CupertinoIcons.person_2_square_stack, color: Colors.black,),
+                                      Text("Tidak ada akun real", style: kDefaultTextStyle(color: Colors.black),)
+                                    ],
+                                  ),
+                                ) : 
+                                SingleChildScrollView(
+                                  child: Column(
+                                    children: List.generate(
+                                      productControllers.categoryModels.length, (index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(bottom: 5),
+                                            child: ListTile(
+                                              tileColor: Colors.black12,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(7)
+                                              ),
+                                              dense: true,
+                                              title: Text(productControllers.categoryModels[index].nama ?? 'Unknown', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
+                                              onTap: () async {
+                                                setState(() {
+                                                  categoryItemController.text = productControllers.categoryModels[index].nama!;
+                                                  categorySelected = productControllers.categoryModels[index].id;
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          );
+                                        }
+                                    )
+                                  ),
+                                ),
+                              )
+                            );
+                          },
                           decoration: InputDecoration(
                             label: const Text("Category"),
                             suffixIcon: IconButton(
@@ -150,24 +238,53 @@ class _AddItemsState extends State<AddItems> {
                       borderRadius: BorderRadius.circular(15),
                       color: Colors.white60,
                     ),
-                    child: Row(
+                    child: Column(
                       children: [
-                        Expanded(child: 
-                          TextField(
-                            controller: openingStockItemController,
-                            decoration: const InputDecoration(
-                              label: Text("Harga Penjualan"),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                controller: hargaPenjualanItemController,
+                                decoration: const InputDecoration(
+                                  label: Text("Harga Penjualan"),
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 20),
+                            Expanded(child: 
+                              TextField(
+                                controller: biayaItemController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  label: Text("Biaya"),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 20),
-                        Expanded(child: 
-                          TextField(
-                            controller: openingStockItemController,
-                            decoration: const InputDecoration(
-                              label: Text("Biaya"),
+                        Row(
+                          children: [
+                            Expanded(child: 
+                              TextField(
+                                keyboardType: TextInputType.number,
+                                controller: hargaBeliItemController,
+                                decoration: const InputDecoration(
+                                  label: Text("Harga Beli"),
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 20),
+                            Expanded(child: 
+                              TextField(
+                                controller: stockMinimal,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  label: Text("Stock Minimal"),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -177,6 +294,7 @@ class _AddItemsState extends State<AddItems> {
             ),
           ),
         ),
+        Obx(() => productControllers.isLoading.value ? floatingLoading() : const SizedBox())
       ],
     );
   }

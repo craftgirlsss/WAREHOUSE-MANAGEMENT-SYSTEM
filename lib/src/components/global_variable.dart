@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+final client = Supabase.instance.client;
 
 class GlobalVariable{
   static const Color mainColor = Color.fromRGBO(128, 58, 217, 1);

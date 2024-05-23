@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 class EditItem extends StatefulWidget {
   final String? namaItem;
   final String? skuItem;
-  final String? openingStockItem;
+  final int? openingStockItem;
   final String? namaPenerbitItem;
   final String? categoryItem;
-  final String? hargaPenjualanItem;
-  final String? biayaItem;
+  final int? hargaPenjualanItem;
+  final double? biayaItem;
   const EditItem({super.key, this.namaItem, this.skuItem, this.openingStockItem, this.namaPenerbitItem, this.categoryItem, this.hargaPenjualanItem, this.biayaItem});
 
   @override
@@ -18,6 +20,7 @@ class EditItem extends StatefulWidget {
 }
 
 class _EditItemState extends State<EditItem> {
+  ProductControllers productControllers = Get.find();
   TextEditingController namaItemController = TextEditingController();
   TextEditingController skuItemController = TextEditingController();
   TextEditingController openingStockItemController = TextEditingController();
@@ -31,11 +34,11 @@ class _EditItemState extends State<EditItem> {
     super.initState();
     namaItemController.text = widget.namaItem ?? 'Unknown';
     skuItemController.text = widget.skuItem ?? 'Unknown';
-    openingStockItemController.text = widget.openingStockItem ?? 'Unknown';
+    openingStockItemController.text = widget.openingStockItem.toString();
     namaPenerbitItemController.text = widget.namaPenerbitItem ?? 'Unknown';
     categoryItemController.text = widget.categoryItem ?? 'Unknown';
-    hargaPenjualanItemController.text = widget.hargaPenjualanItem ?? 'Rp 0';
-    biayaItemController.text = widget.biayaItem ?? 'Rp 0';
+    hargaPenjualanItemController.text = widget.hargaPenjualanItem.toString();
+    biayaItemController.text = widget.biayaItem!.toInt().toString();
   }
 
   @override
@@ -116,11 +119,15 @@ class _EditItemState extends State<EditItem> {
                         TextField(
                           controller: categoryItemController,
                           readOnly: true,
-                          onTap: (){},
+                          onTap: ()async {
+                            
+                          },
                           decoration: InputDecoration(
                             label: const Text("Category"),
                             suffixIcon: IconButton(
-                              onPressed: (){}, 
+                              onPressed: (){
+                                
+                              }, 
                               icon: const Icon(Icons.add)
                             )
                           ),
@@ -139,7 +146,7 @@ class _EditItemState extends State<EditItem> {
                       children: [
                         Expanded(child: 
                           TextField(
-                            controller: openingStockItemController,
+                            controller: hargaPenjualanItemController,
                             decoration: const InputDecoration(
                               label: Text("Harga Penjualan"),
                             ),
@@ -148,7 +155,7 @@ class _EditItemState extends State<EditItem> {
                         const SizedBox(width: 20),
                         Expanded(child: 
                           TextField(
-                            controller: openingStockItemController,
+                            controller: biayaItemController,
                             decoration: const InputDecoration(
                               label: Text("Biaya"),
                             ),

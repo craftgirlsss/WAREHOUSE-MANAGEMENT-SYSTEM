@@ -4,7 +4,7 @@ import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 
 Widget floatingLoading() {
   return Container(
-    color: Colors.black.withOpacity(0.7),
+    color: Colors.black.withOpacity(0.3),
     child: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

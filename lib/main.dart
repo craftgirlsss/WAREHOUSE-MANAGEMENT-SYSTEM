@@ -12,9 +12,9 @@ void main() async {
   HttpOverrides.global = CertificateNetwork();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await Supabase.initialize(
-    url: 'https://zhfjjcaxzhmrexhkzest.supabase.co',
+    url: 'https://cgwedpervqbywpyjftzu.supabase.co',
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoZmpqY2F4emhtcmV4aGt6ZXN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTU2Nzg4MDMsImV4cCI6MjAxMTI1NDgwM30.i1m1xAiYvDYOWLN8YuIMGTF2mu9CfsB_etdfwNd2DBE',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnd2VkcGVydnFieXdweWpmdHp1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDYyNTgwMTYsImV4cCI6MjAyMTgzNDAxNn0.NmjnWZg_tq728Zuz4Wlnrrd8oBA4PlflIyYAQ6MrExw',
   );
   runApp(const MyApp());
 }

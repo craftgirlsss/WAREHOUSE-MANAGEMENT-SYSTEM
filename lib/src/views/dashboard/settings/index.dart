@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
-
+import 'package:warehouseapp/src/components/global_variable.dart' as vars;
+import 'package:warehouseapp/src/views/login/login.dart';
 import 'about_us.dart';
 import 'category_settings.dart';
 
@@ -91,8 +93,12 @@ class _SettingsTabState extends State<SettingsTab> {
         actions: <Widget>[
           TextButton(
             child: const Text('YA'),
-            onPressed: () {
-              Navigator.of(context).pop();
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.remove('loggedIn');
+              await vars.client.auth.signOut().then((value) {                
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false); 
+              });
             },  
           ),
           TextButton(
