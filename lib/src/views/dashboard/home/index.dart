@@ -25,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   AccountController accountController = Get.put(AccountController());
   late List<ChartData> data;
   late TooltipBehavior tooltip;
+  int? totalEarnings = 0;
+  int? totalSpendings = 0;
 
   String dropDownValueToday = 'Today';
   // List of items in our dropdown Today menu 
@@ -57,6 +59,12 @@ class _HomePageState extends State<HomePage> {
     productControllers.fetchProductItems();
     productControllers.soldQuantities();
     productControllers.purchasedQuantities();
+    productControllers.totalEarnings().then((value) => setState(() {
+      totalEarnings = value;
+    }));
+    productControllers.totalSpendings().then((value) => setState(() {
+      totalSpendings = value;
+    }));
     super.initState();
   }
 
@@ -77,6 +85,12 @@ class _HomePageState extends State<HomePage> {
         await accountController.getPersonContact();
         await productControllers.soldQuantities();
         await productControllers.purchasedQuantities();
+        await productControllers.totalEarnings().then((value) => setState(() {
+          totalEarnings = value;
+        }));
+        await productControllers.totalSpendings().then((value) => setState(() {
+          totalSpendings = value;
+        }));
         setState(() {});
       },
       child: Scaffold(
@@ -144,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("Earnings", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
-                                    Text("Rp. 0", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
+                                    Text("Rp.${totalEarnings ?? 0}", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
                                   ],
                                 ),
                               )
@@ -171,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("Spendings", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
-                                    Text("Rp. 0", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
+                                    Text("Rp.${totalSpendings ?? 0}", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
                                   ],
                                 ),
                               )

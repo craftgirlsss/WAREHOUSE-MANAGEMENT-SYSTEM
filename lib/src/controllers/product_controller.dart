@@ -160,4 +160,49 @@ class ProductControllers extends GetxController {
     }
     isLoading.value = false;
   }
+
+
+  Future<int> totalEarnings() async {
+    int earning = 0;
+    int totalEarning = 0;
+    isLoading.value = true;
+    try {
+      List resultTotalEarnings = await vars.client
+          .from('sale_order_item')
+          .select('harga_total');
+      print("ini resultTotalEarnings $resultTotalEarnings");
+      for(int i = 0; i < resultTotalEarnings.length; i++){
+        earning = resultTotalEarnings[i]['harga_total'];
+        totalEarning = totalEarning + earning;
+      }
+      isLoading.value = false;
+      return totalEarning;
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+      return 0;
+    }
+  }
+
+  Future<int> totalSpendings() async {
+    int spending = 0;
+    int totalSpending = 0;
+    isLoading.value = true;
+    try {
+      List resultTotalSpendings = await vars.client
+          .from('purchase_order_item')
+          .select('harga_total');
+      print("ini resulttotalSpendings $resultTotalSpendings");
+      for(int i = 0; i < resultTotalSpendings.length; i++){
+        spending = resultTotalSpendings[i]['harga_total'];
+        totalSpending = totalSpending + spending;
+      }
+      isLoading.value = false;
+      return totalSpending;
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+      return 0;
+    }
+  }
 }
