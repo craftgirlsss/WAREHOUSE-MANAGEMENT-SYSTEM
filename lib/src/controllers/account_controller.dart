@@ -57,7 +57,8 @@ class AccountController extends GetxController{
       //     listContacts.add(resultVendor[i]);
       //   }
       // }
-      // print(resultCustomer);
+      print("ini result all contact = $listContacts");
+      print("ini result all contact = ${listContacts.length}");
       isLoading.value = false;
     } catch (e) {
       print(e);

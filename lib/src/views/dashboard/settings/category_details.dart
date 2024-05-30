@@ -3,6 +3,7 @@ import 'package:warehouseapp/src/components/appbars/default_appbar.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
+import 'package:warehouseapp/src/views/dashboard/settings/add_category.dart';
 
 class CategoryDetails extends StatefulWidget {
   const CategoryDetails({super.key});
@@ -91,7 +92,11 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                 ],
               ),
             ),
-            floatingActionButton: FloatingActionButton(onPressed: (){}, backgroundColor: Colors.indigo.shade800, shape: const CircleBorder(), elevation: 0, child: const Icon(Icons.add, color: Colors.white,),),
+            floatingActionButton: FloatingActionButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddCategooryPage()));
+            }, 
+            backgroundColor: Colors.indigo.shade800, shape: const CircleBorder(), elevation: 0, child: const Icon(Icons.add, color: Colors.white,),),
           ),
         ),
       ],

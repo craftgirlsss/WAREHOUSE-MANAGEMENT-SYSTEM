@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 void saveAddingStock({String? contactName, String? dateTime, String? notes, String? items, Function()? onOK}){
-  if(contactName != null && dateTime != null && notes != null && items != null){
+  if(contactName != '' && dateTime != '' && notes != '' && items != ''){
     Get.defaultDialog(
       title: "Apakah anda yakin menambah kontak dan disimpan dalam database?",
       actions: [

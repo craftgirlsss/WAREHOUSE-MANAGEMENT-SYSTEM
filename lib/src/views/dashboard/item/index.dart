@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:warehouseapp/src/components/appbars/default_appbar.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
@@ -10,7 +11,8 @@ import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 import 'item_detail.dart';
 
 class ItemsPage extends StatefulWidget {
-  const ItemsPage({super.key});
+  final bool withAppBar;
+  const ItemsPage({super.key, required this.withAppBar});
 
   @override
   State<ItemsPage> createState() => _ItemsPageState();
@@ -22,7 +24,6 @@ class _ItemsPageState extends State<ItemsPage> {
   @override
   void initState() {
     super.initState();
-    productControllers.fetchProductItems();
   }
 
   String? datePicked;
@@ -39,6 +40,9 @@ class _ItemsPageState extends State<ItemsPage> {
               setState(() {});
             },
             child: Scaffold(
+              appBar: widget.withAppBar == false 
+              ? null 
+              : kDefaultAppBar(context, title: "All Items"),
               backgroundColor: Colors.transparent,
               body: Obx(
                 () => productControllers.isLoading.value 

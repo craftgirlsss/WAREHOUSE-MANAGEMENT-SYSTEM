@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/customer_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 class AlamatTagihan extends StatefulWidget {
@@ -11,15 +13,14 @@ class AlamatTagihan extends StatefulWidget {
 }
 
 class _AlamatTagihanState extends State<AlamatTagihan> {
+  CustomerController customerController = Get.find();
   TextEditingController alamatLengkap = TextEditingController();
   TextEditingController kodePos = TextEditingController();
-  TextEditingController nomorTelepon = TextEditingController();
 
   @override
   void dispose() {
     alamatLengkap.dispose();
     kodePos.dispose();
-    nomorTelepon.dispose();
     super.dispose();
   }
   @override
@@ -46,7 +47,15 @@ class _AlamatTagihanState extends State<AlamatTagihan> {
                 tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               ),
                 actions: [
-                  TextButton(onPressed: (){}, child: Text("Save", style: kDefaultTextStyle(color: Colors.white),))
+                  Obx(() => TextButton(
+                    onPressed: customerController.isLoading.value ? (){} : (){
+                      customerController.alamatTagihan.value = alamatLengkap.text;
+                      customerController.kode_pos_alamat_tagihan.value = kodePos.text;
+                      Get.snackbar('Berhasil', "Berhasil menyimpan data tagihan", colorText: Colors.black, backgroundColor: Colors.white);
+                      Future.delayed(const Duration(seconds: 1), (){
+                        Navigator.pop(context);
+                      });
+                    }, child: Text("Save", style: kDefaultTextStyle(color: Colors.white),)))
               ],
             ),
             body: SingleChildScrollView(
@@ -64,21 +73,18 @@ class _AlamatTagihanState extends State<AlamatTagihan> {
                     child: Column(
                       children: [
                         TextField(
+                          keyboardType: TextInputType.streetAddress,
                           controller: alamatLengkap,
                           decoration: const InputDecoration(
                             label: Text("Alamat Lengkap"),
                           ),
                         ),
                         TextField(
+                          keyboardType: TextInputType.number,
+                          maxLength: 5,
                           controller: kodePos,
                           decoration: const InputDecoration(
                             label: Text("Kode Pos"),
-                          ),
-                        ),
-                        TextField(
-                          controller: nomorTelepon,
-                          decoration: const InputDecoration(
-                            label: Text("Nomor Telepon"),
                           ),
                         ),
                       ],

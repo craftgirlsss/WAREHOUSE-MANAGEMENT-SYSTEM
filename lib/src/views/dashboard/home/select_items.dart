@@ -71,7 +71,7 @@ class _SelectItemsState extends State<SelectItems> {
                             TextButton(
                               onPressed: (){
                               Get.to(() => const AddingContactPage());
-                            }, child: Text("Done", style: kDefaultTextStyle(color: Colors.white),))
+                            }, child: Text("Add Contact", style: kDefaultTextStyle(color: Colors.white),))
                         ],
                         bottom: PreferredSize(
                           preferredSize: const Size.fromHeight(60), 
@@ -109,10 +109,17 @@ class _SelectItemsState extends State<SelectItems> {
                         itemBuilder: (context, index){
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: SelectAndAddItems(
-                              subtitleJumlahBuku: productControllers.productModels[index].stockAwal,
-                              title: "${productControllers.productModels[index].toko?.kode} - ${productControllers.productModels[index].nama}",
-                              item: productControllers.productModels[index].stockAwal,
+                            child: Obx(() => SelectAndAddItems(
+                                onPressed: productControllers.isLoading.value ? (){} : (){
+                                  productControllers.itemNameSelected.value = productControllers.productModels[index].nama!;
+                                  productControllers.idItemSelected.value = productControllers.productModels[index].id!;
+                                  productControllers.priceBook.value = productControllers.productModels[index].hargaBeli!;
+                                  Navigator.pop(context);
+                                },
+                                subtitleJumlahBuku: productControllers.productModels[index].stockAwal,
+                                title: "${productControllers.productModels[index].toko?.kode} - ${productControllers.productModels[index].nama}",
+                                item: productControllers.productModels[index].stockAwal,
+                              ),
                             )
                           );
                         }, 

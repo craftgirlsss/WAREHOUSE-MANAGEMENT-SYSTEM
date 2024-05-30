@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/buttons/default_button.dart';
 import 'package:warehouseapp/src/components/global_variable.dart';
+import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/customer_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 class SalesOrderPage extends StatefulWidget {
@@ -17,6 +20,7 @@ class SalesOrderPage extends StatefulWidget {
 class _SalesOrderPageState extends State<SalesOrderPage> {
   TextEditingController namaCustomerController = TextEditingController();
   TextEditingController nomorResiController = TextEditingController();
+  CustomerController customerController = Get.put(CustomerController());
   String? metodePembayaran;
   String? datePickedOrder;
   String? datePickedSampai;
@@ -60,6 +64,56 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextField(
+                        controller: namaCustomerController,
+                        readOnly: true,
+                        onTap: () async {
+                            customerController.getCustomer();
+                            Get.defaultDialog(
+                              backgroundColor: Colors.white,
+                              title: "Daftar Customer",
+                              titleStyle: kDefaultTextStyle(color: Colors.black, fontSize: 16),
+                              titlePadding: const EdgeInsets.only(top: 15),
+                              content: Obx(
+                                () => customerController.isLoading.value ? Center(
+                                  child: floatingLoading(),
+                                ) : customerController.listCustomer.length == 0 ? Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(CupertinoIcons.person_2_square_stack, color: Colors.black,),
+                                      Text("Tidak ada customer", style: kDefaultTextStyle(color: Colors.black),)
+                                    ],
+                                  ),
+                                ) : SingleChildScrollView(
+                                    child: Column(
+                                      children: List.generate(
+                                        customerController.listCustomer.length, (index) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(bottom: 5),
+                                              child: ListTile(
+                                                tileColor: Colors.black12,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(7)
+                                                ),
+                                                dense: true,
+                                                title: Text(customerController.listCustomer[index]['nama'] ?? 'Tidak ada nama', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
+                                                onTap: () async {
+                                                  setState(() {
+                                                    namaCustomerController.text = customerController.listCustomer[index]['nama'];
+                                                  });
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            );
+                                          }
+                                      )
+                                    ),
+                                  ),
+                                ),
+                            );
+                          },
                         decoration: InputDecoration(
                           label: Text("Nama Customer", style: kDefaultTextStyle(fontSize: 16),),
                           labelStyle: kDefaultTextStyle(fontSize: 16),

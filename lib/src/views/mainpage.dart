@@ -2,12 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
-import 'package:warehouseapp/src/helpers/functions/function_helper.dart';
+import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/views/dashboard/home/index.dart';
 import 'package:warehouseapp/src/views/dashboard/item/index.dart';
 import 'package:warehouseapp/src/views/dashboard/sales_order/add_new_customer.dart';
 import 'package:warehouseapp/src/views/dashboard/update_stock/index.dart';
-
 import 'dashboard/history/index.dart';
 import 'dashboard/item/add_item.dart';
 import 'dashboard/sales_order/index.dart';
@@ -22,11 +21,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  ProductControllers productControllers = Get.put(ProductControllers());
   int selectedIndex = 0;
   String nameAppBar = 'Home';
   static  List<Widget> widgetOptions = <Widget>[
     const HomePage(),
-    const ItemsPage(),
+    const ItemsPage(
+      withAppBar: false,
+    ),
     const SalesOrderPage(),
     const UpdateStockPage(),
     const TrackingBarcode(),
@@ -55,10 +57,20 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.indigo.shade800,
         actions: [
           if(selectedIndex == 3)
-            TextButton(onPressed: (){
-              saveAddingStock();
-            }, 
-            child: Text("Save", style: kDefaultTextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),)) 
+            Obx(() => TextButton(
+              onPressed: productControllers.isLoading.value ? (){} : (){
+                if(productControllers.vendorNameItemSelected.value == '' 
+                || productControllers.dateItemSelected.value == '' 
+                || productControllers.notesitemSelected.value == '' 
+                || productControllers.itemNameSelected.value == '' 
+                || productControllers.itemCountSelected.value < 2){
+                  Get.snackbar("Gagal", "Mohon isi semua field dan pastikan jumlah barang tidak kurang dari 2", backgroundColor: Colors.white);
+                }else{
+                  productControllers.updateStock();
+                }
+              }, 
+              child: Text("Save", style: kDefaultTextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),)),
+            ) 
           else if(selectedIndex == 1)
             IconButton(
               onPressed: (){
@@ -198,7 +210,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
           ],
-                ),
+        ),
         ),
       ),
       body: 

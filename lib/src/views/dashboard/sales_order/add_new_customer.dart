@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/buttons/default_button.dart';
+import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/customer_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 import 'package:warehouseapp/src/views/dashboard/tracking/alamat_pengiriman.dart';
 import 'package:warehouseapp/src/views/dashboard/tracking/alamat_tagihan.dart';
@@ -16,12 +18,15 @@ class AddNewCustomer extends StatefulWidget {
 }
 
 class _AddNewCustomerState extends State<AddNewCustomer> {
+  CustomerController customerController = Get.find();
   CustomerCategory? customerCategory = CustomerCategory.perusahaan;
   TextEditingController nama = TextEditingController();
   TextEditingController namaPerusahaan = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController nomorTelepon = TextEditingController();
+  TextEditingController alamat = TextEditingController();
   TextEditingController pajak = TextEditingController();
+  String? customerCategoryString;
 
   @override
   void initState() {
@@ -34,6 +39,7 @@ class _AddNewCustomerState extends State<AddNewCustomer> {
     nama.dispose();
     namaPerusahaan.dispose();
     email.dispose();
+    alamat.dispose();
     nomorTelepon.dispose();
     pajak.dispose();
     super.dispose();
@@ -88,6 +94,7 @@ class _AddNewCustomerState extends State<AddNewCustomer> {
                                 onChanged:(CustomerCategory? value) { 
                                   setState(() {
                                     customerCategory = value;
+                                    customerCategoryString = 'Perusahaan';
                                   });
                                 },
                               ),
@@ -101,6 +108,7 @@ class _AddNewCustomerState extends State<AddNewCustomer> {
                                 onChanged:(CustomerCategory? value) { 
                                   setState(() {
                                     customerCategory = value;
+                                    customerCategoryString = 'Individu';
                                   });
                                 },
                               ),
@@ -113,19 +121,28 @@ class _AddNewCustomerState extends State<AddNewCustomer> {
                             label: Text("Nama"),
                           ),
                         ),
-                        TextField(
+                        customerCategoryString == null ? Container() : customerCategoryString == "Individu" ? Container() : TextField(
                           controller: namaPerusahaan,
                           decoration: const InputDecoration(
                             label: Text("Nama Perusahaan"),
                           ),
                         ),
                         TextField(
+                          keyboardType: TextInputType.emailAddress,
                           controller: email,
                           decoration: const InputDecoration(
                             label: Text("Email"),
                           ),
                         ),
                         TextField(
+                          keyboardType: TextInputType.streetAddress,
+                          controller: alamat,
+                          decoration: const InputDecoration(
+                            label: Text("Alamat"),
+                          ),
+                        ),
+                        TextField(
+                          keyboardType: TextInputType.number,
                           controller: nomorTelepon,
                           decoration: const InputDecoration(
                             label: Text("Nomor Telepon"),
@@ -133,6 +150,7 @@ class _AddNewCustomerState extends State<AddNewCustomer> {
                         ),
                         TextField(
                           controller: pajak,
+                          keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             label: Text("Pajak"),
                           ),
@@ -166,11 +184,34 @@ class _AddNewCustomerState extends State<AddNewCustomer> {
                       ),
                     ],
                   ),
+                  Obx(() => kDeafultButton(
+                      onPressed: customerController.isLoading.value ? (){} : () async {
+                        customerController.addCustomer(
+                          tipeCostumer: customerCategoryString,
+                          nama: nama.text,
+                          namaPerusahaan: namaPerusahaan.text,
+                          email: email.text,
+                          phoneNumber: nomorTelepon.text,
+                          npwp: pajak.text,     
+                          alamat: alamat.text                     
+                        ).then((value) {
+                          Get.snackbar('Berhasil', "Berhasil menambah data customer", colorText: Colors.black, backgroundColor: Colors.white);
+                          Future.delayed(const Duration(seconds: 1), (){
+                            Navigator.pop(context);
+                          });
+                        });
+                      },
+                      title: "Submit"
+                    ),
+                  )
                 ],
               ),
             ),
           ),
         ),
+        Obx(() => customerController.isLoading.value == true
+            ? floatingLoading()
+            : const SizedBox()),
       ],
     );
   }

@@ -1,10 +1,18 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:warehouseapp/src/models/category_models.dart';
 import 'package:warehouseapp/src/models/product_models.dart';
 import 'package:warehouseapp/src/components/global_variable.dart' as vars;
 
 class ProductControllers extends GetxController {
   var isLoading = false.obs;
+  var itemCountSelected = 0.obs;
+  var itemNameSelected = ''.obs;
+  var notesitemSelected = ''.obs;
+  var vendorNameItemSelected = ''.obs;
+  var priceBook = 0.obs;
+  var dateItemSelected = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  var idItemSelected = 0.obs;
   var productModels = <ProductModels>[].obs;
   var categoryModels = <CategoryModels>[].obs;
   var id = vars.client.auth.currentUser?.id;
@@ -203,6 +211,82 @@ class ProductControllers extends GetxController {
       print(e);
       isLoading.value = false;
       return 0;
+    }
+  }
+
+  updateStock({int? itemID, int? quantity, int? harga_per_item, int? harga_total}) async {
+    isLoading.value = true;
+    int total = priceBook.value * itemCountSelected.value;
+    print("ini total harga $total");
+    print("ini item id ${idItemSelected.value}");
+    try {
+      List resultTotalUpdateStock = await vars.client
+          .from('purchase_order_item')
+          .update({'quantity': itemCountSelected.value,
+            'harga_per_item' : priceBook.value,
+            'harga_total' : total
+          })
+          .eq('item_id', idItemSelected.value)
+          .select();
+      print("ini resulttotalUpdateStock $resultTotalUpdateStock");
+      isLoading.value = false;
+      if(resultTotalUpdateStock.length == 0){
+        Get.snackbar("Gagal", "Tidak ada buku yang dimaksud didalam tabel purchase order item");
+      }
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+    }
+  }
+
+  Future<bool> addCategory({String? kodeBuku, String? judul}) async {
+    isLoading.value = true;
+    try {
+      List resultAddingCategory = await vars.client
+        .from('kategori')
+        .insert({
+          'nama' : judul,
+          'kode'  : kodeBuku
+        })
+        .select();
+        print("ini resulttotalUpdateStock $resultAddingCategory");
+        isLoading.value = false;
+      if(resultAddingCategory.length == 0){
+        Get.snackbar("Gagal", "Gagal menyimpan data ke tabel kategori",);
+        return false;
+      }else if(resultAddingCategory.length > 0){
+        return true;
+      }else{
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+      return false;
+    }
+  }
+
+  Future<bool> deleteCategory({String? kodeBuku}) async {
+    isLoading.value = true;
+    try {
+      List resultDeleteCategory = await vars.client
+        .from('kategori')
+        .delete()
+        .eq('kode', kodeBuku!);
+        print("ini resultDeleteCategory $resultDeleteCategory");
+        isLoading.value = false;
+      if(resultDeleteCategory.length == 0){
+        Get.snackbar("Gagal", "Gagal mengahpus kategori dari tabel kategori",);
+        return false;
+      }else if(resultDeleteCategory.length > 0){
+        return true;
+      }else{
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+      return false;
     }
   }
 }

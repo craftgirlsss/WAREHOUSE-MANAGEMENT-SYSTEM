@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/customer_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 class AlamatPengiriman extends StatefulWidget {
@@ -11,15 +14,14 @@ class AlamatPengiriman extends StatefulWidget {
 }
 
 class _AlamatPengirimanState extends State<AlamatPengiriman> {
+  CustomerController customerController = Get.find();
   TextEditingController alamatPengiriman = TextEditingController();
   TextEditingController kodePos = TextEditingController();
-  TextEditingController nomorTelepon = TextEditingController();
 
   @override
   void dispose() {
     alamatPengiriman.dispose();
     kodePos.dispose();
-    nomorTelepon.dispose();
     super.dispose();
   }
   @override
@@ -46,7 +48,15 @@ class _AlamatPengirimanState extends State<AlamatPengiriman> {
                 tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               ),
                 actions: [
-                  TextButton(onPressed: (){}, child: Text("Save", style: kDefaultTextStyle(color: Colors.white),))
+                  Obx(() => TextButton(
+                    onPressed: customerController.isLoading.value ? (){} : (){
+                      customerController.alamatPengiriman.value = alamatPengiriman.text;
+                      customerController.kode_pos_alamat_pengiriman.value = kodePos.text;
+                      Get.snackbar('Berhasil', "Berhasil menyimpan data pengiriman", colorText: Colors.black, backgroundColor: Colors.white);
+                      Future.delayed(const Duration(seconds: 1), (){
+                        Navigator.pop(context);
+                      });
+                    }, child: Text("Save", style: kDefaultTextStyle(color: Colors.white),)))
               ],
             ),
             body: SingleChildScrollView(
@@ -64,21 +74,18 @@ class _AlamatPengirimanState extends State<AlamatPengiriman> {
                     child: Column(
                       children: [
                         TextField(
+                          keyboardType: TextInputType.streetAddress,
                           controller: alamatPengiriman,
                           decoration: const InputDecoration(
                             label: Text("Alamat Lengkap"),
                           ),
                         ),
                         TextField(
+                          keyboardType: TextInputType.number,
+                          maxLength: 5,
                           controller: kodePos,
                           decoration: const InputDecoration(
                             label: Text("Kode Pos"),
-                          ),
-                        ),
-                        TextField(
-                          controller: nomorTelepon,
-                          decoration: const InputDecoration(
-                            label: Text("Nomor Telepon"),
                           ),
                         ),
                       ],

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
@@ -10,8 +9,7 @@ import 'package:warehouseapp/src/controllers/account_controller.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/models/data_chart_models.dart';
 import 'package:warehouseapp/src/views/dashboard/home/contacts.dart';
-
-import 'select_items.dart';
+import 'package:warehouseapp/src/views/dashboard/item/index.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -204,7 +202,9 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Expanded(
                       child: GestureDetector(
-                        onTap: () => Get.to(() => const SelectItems()),
+                        onTap: () => Get.to(() => const ItemsPage(
+                          withAppBar: true,
+                        )),
                         child: Container(
                           padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(

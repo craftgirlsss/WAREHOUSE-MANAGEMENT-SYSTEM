@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
-import 'package:warehouseapp/src/components/global_variable.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
+import 'package:warehouseapp/src/views/dashboard/settings/add_category.dart';
 import 'category_details.dart';
 
 class CategorySettings extends StatefulWidget {
@@ -58,33 +58,6 @@ class _CategorySettingsState extends State<CategorySettings> {
                       tooltip:
                           MaterialLocalizations.of(context).openAppDrawerTooltip,
                     ),
-                    actions: [
-                      IconButton(
-                          onPressed: () {
-                            Get.defaultDialog(
-                              title: "Informasi",
-                              titlePadding: const EdgeInsets.only(top: 15),
-                                contentPadding: const EdgeInsets.only(left: 15, right: 15),
-                                content: const Text(
-                                    "Apakah anda yakin ingin menghapus item?"),
-                                cancel: TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("Ya",
-                                        style: kDefaultTextStyle(
-                                            color: GlobalVariable.mainColor))),
-                                confirm: TextButton(
-                                  onPressed: (){
-                                    Navigator.pop(context);
-                                  }, 
-                                  child: Text("Tidak",
-                                        style: kDefaultTextStyle(
-                                            color: GlobalVariable.mainColor)))            
-                                );
-                          },
-                          icon: const Icon(Icons.delete, color: Colors.white))
-                    ],
                     bottom: PreferredSize(
                       preferredSize: const Size.fromHeight(60),
                       child: Padding(
@@ -119,6 +92,30 @@ class _CategorySettingsState extends State<CategorySettings> {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ListTile(
+                            onLongPress: (){
+                              Get.defaultDialog(
+                                title: "Hapus kategori \"${productControllers.categoryModels[index].kode} - ${productControllers.categoryModels[index].nama}\"?",
+                                titleStyle: kDefaultTextStyle(),
+                                titlePadding: const EdgeInsets.only(top: 10),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+                                content: Text("Apakah anda yakin menghapus kategori ini?", textAlign: TextAlign.center,),
+                                barrierDismissible: false,
+                                actions: [
+                                  Obx(() => TextButton(
+                                    onPressed: productControllers.isLoading.value ? (){} : () async {
+                                      await productControllers.deleteCategory(
+                                        kodeBuku : productControllers.categoryModels[index].kode);
+                                        Navigator.pop(context);
+                                        Get.snackbar("Berhasil", "Berhasil menghapus kategori", backgroundColor: Colors.white);
+                                        productControllers.getCategoryItem();
+                                    }, child: Text("Ya", style: TextStyle(color: Colors.red),)),
+                                  ),
+                                  TextButton(onPressed: (){
+                                    Navigator.pop(context);
+                                  }, child: Text("Tidak")),
+                                ]
+                              );
+                            },
                             onTap: () {
                               Get.to(() => const CategoryDetails());
                             },
@@ -134,11 +131,6 @@ class _CategorySettingsState extends State<CategorySettings> {
                               children: [Text("1")],
                             ),
                             title: Text(
-                              "Buku Pelajaran",
-                              style:
-                                  kDefaultTextStyle(fontWeight: FontWeight.normal),
-                            ),
-                            subtitle: Text(
                               "${productControllers.categoryModels[index].kode} - ${productControllers.categoryModels[index].nama}",
                               style: kDefaultTextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
@@ -151,7 +143,9 @@ class _CategorySettingsState extends State<CategorySettings> {
                 ],
               ),
               floatingActionButton: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AddCategooryPage()));
+                },
                 backgroundColor: Colors.indigo.shade800,
                 shape: const CircleBorder(),
                 elevation: 0,

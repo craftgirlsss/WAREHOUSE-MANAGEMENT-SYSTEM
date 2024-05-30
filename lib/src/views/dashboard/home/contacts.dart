@@ -138,7 +138,7 @@ class _ContactPageState extends State<ContactPage> {
                                     borderRadius: BorderRadius.circular(5),
                                     color: GlobalVariable.mainColor
                                   ),
-                                  child: Center(child: Text("${accountController.listContacts[index]['nama']}"[0], style: kDefaultTextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),)),
+                                  child: Center(child: Text("${accountController.listContacts[index]['nama'][0]}", style: kDefaultTextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),)),
                                 ),
                                 trailing: Container(
                                   width: MediaQuery.of(context).size.width / 4.5,
@@ -157,7 +157,7 @@ class _ContactPageState extends State<ContactPage> {
                                   ),
                                 ),                            
                                 title: Text(accountController.listContacts[index]['nama'], style: kDefaultTextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
-                                subtitle: const Text("Assitance Manager"),
+                                // subtitle: const Text("Assitance Manager"),
                             ),
                           );
                         }, 
