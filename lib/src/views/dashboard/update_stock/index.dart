@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
+import 'package:warehouseapp/src/components/buttons/default_button.dart';
 import 'package:warehouseapp/src/components/global_variable.dart';
 import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
@@ -184,11 +185,32 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                       ),
                     ),
                   ),
-                )
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: kDeafultButton(
+                    onPressed: (){
+                      if(productControllers.vendorNameItemSelected.value == '' 
+                        || productControllers.dateItemSelected.value == '' 
+                        || productControllers.notesitemSelected.value == '' 
+                        || productControllers.itemNameSelected.value == '' 
+                        || productControllers.itemCountSelected.value < 2){
+                          Get.snackbar("Gagal", "Mohon isi semua field dan pastikan jumlah barang tidak kurang dari 2", backgroundColor: Colors.white);
+                        }else{
+                          productControllers.updateStock();
+                        }
+                    },
+                    title: "Save"
+                  ),
+                ),
               ],
             ),
           ),
         ),
+        Obx(() => productControllers.isLoading.value == true
+            ? floatingLoading()
+            : const SizedBox()),
       ],
     );
   }

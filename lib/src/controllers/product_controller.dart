@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:warehouseapp/src/models/category_models.dart';
@@ -232,6 +233,8 @@ class ProductControllers extends GetxController {
       isLoading.value = false;
       if(resultTotalUpdateStock.length == 0){
         Get.snackbar("Gagal", "Tidak ada buku yang dimaksud didalam tabel purchase order item");
+      }else{
+        Get.snackbar("Gagal", "Berhasil mengupdate stock buku", backgroundColor: Colors.white);
       }
     } catch (e) {
       print(e);
