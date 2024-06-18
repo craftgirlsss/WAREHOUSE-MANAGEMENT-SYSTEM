@@ -8,9 +8,9 @@ import 'package:warehouseapp/src/components/global_variable.dart';
 import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/customer_controller.dart';
+import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/currencies/format_currency.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:warehouseapp/src/helpers/random_string.dart';
 import 'package:warehouseapp/src/views/dashboard/sales_order/pdf_preview.dart';
 
@@ -22,10 +22,19 @@ class SalesOrderPage extends StatefulWidget {
 }
 
 class _SalesOrderPageState extends State<SalesOrderPage> {
+  CustomerController customerController = Get.put(CustomerController());
+  ProductControllers productControllers = Get.put(ProductControllers());
   TextEditingController namaCustomerController = TextEditingController();
   TextEditingController nomorResiController = TextEditingController();
-  CustomerController customerController = Get.put(CustomerController());
+  TextEditingController namaBuku = TextEditingController();
+  TextEditingController jumlahBuku = TextEditingController();
+  TextEditingController tarif = TextEditingController();
+  String? realCurrency;
+  static const _locale = 'id';
+  String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(int.parse(s));
+  String get _currency => NumberFormat.compactSimpleCurrency(locale: _locale).currencySymbol;
   String? randomString;
+  int hargaBuku = 0;
   bool showPreview = false;
   String? datePickedOrder;
   String? datePickedSampai;
@@ -49,6 +58,9 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
   void dispose() {
     namaCustomerController.dispose();
     nomorResiController.dispose();
+    tarif.dispose();
+    jumlahBuku.dispose();
+    namaBuku.dispose();
     super.dispose();
   }
 
@@ -82,52 +94,52 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                         controller: namaCustomerController,
                         readOnly: true,
                         onTap: () async {
-                            customerController.getCustomer();
-                            Get.defaultDialog(
-                              backgroundColor: Colors.white,
-                              title: "Daftar Customer",
-                              titleStyle: kDefaultTextStyle(color: Colors.black, fontSize: 16),
-                              titlePadding: const EdgeInsets.only(top: 15),
-                              content: Obx(
-                                () => customerController.isLoading.value ? Center(
-                                  child: floatingLoading(),
-                                ) : customerController.listCustomer.length == 0 ? Container(
-                                  alignment: Alignment.center,
+                          customerController.getCustomer();
+                          Get.defaultDialog(
+                            backgroundColor: Colors.white,
+                            title: "Daftar Customer",
+                            titleStyle: kDefaultTextStyle(color: Colors.black, fontSize: 16),
+                            titlePadding: const EdgeInsets.only(top: 15),
+                            content: Obx(
+                              () => customerController.isLoading.value ? Center(
+                                child: floatingLoading(),
+                              ) : customerController.listCustomer.length == 0 ? Container(
+                                alignment: Alignment.center,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(CupertinoIcons.person_2_square_stack, color: Colors.black,),
+                                    Text("Tidak ada customer", style: kDefaultTextStyle(color: Colors.black),)
+                                  ],
+                                ),
+                              ) : SingleChildScrollView(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(CupertinoIcons.person_2_square_stack, color: Colors.black,),
-                                      Text("Tidak ada customer", style: kDefaultTextStyle(color: Colors.black),)
-                                    ],
-                                  ),
-                                ) : SingleChildScrollView(
-                                    child: Column(
-                                      children: List.generate(
-                                        customerController.listCustomer.length, (index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(bottom: 5),
-                                              child: ListTile(
-                                                tileColor: Colors.black12,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(7)
-                                                ),
-                                                dense: true,
-                                                title: Text(customerController.listCustomer[index]['nama'] ?? 'Tidak ada nama', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
-                                                onTap: () async {
-                                                  setState(() {
-                                                    namaCustomerController.text = customerController.listCustomer[index]['nama'];
-                                                  });
-                                                  Navigator.pop(context);
-                                                },
+                                    children: List.generate(
+                                      customerController.listCustomer.length, (index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(bottom: 5),
+                                            child: ListTile(
+                                              tileColor: Colors.black12,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(7)
                                               ),
-                                            );
-                                          }
-                                      )
-                                    ),
+                                              dense: true,
+                                              title: Text(customerController.listCustomer[index]['nama'] ?? 'Tidak ada nama', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
+                                              onTap: () async {
+                                                setState(() {
+                                                  namaCustomerController.text = customerController.listCustomer[index]['nama'];
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          );
+                                        }
+                                    )
                                   ),
                                 ),
-                            );
+                              ),
+                          );
                           },
                         decoration: InputDecoration(
                           label: Text("Nama Customer", style: kDefaultTextStyle(fontSize: 16),),
@@ -146,18 +158,113 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                         },
                         controller: nomorResiController,
                         decoration: InputDecoration(
-                          suffix: IconButton(
-                            onPressed: (){
-                            randomString = getRandomString(20);
-                            setState(() {
-                              nomorResiController.text = randomString!;
-                            });
-                          }, icon: const Icon(Icons.replay_circle_filled_rounded)),
+                          suffix: GestureDetector(
+                              onTap: (){
+                              randomString = getRandomString(20);
+                              setState(() {
+                                nomorResiController.text = randomString!;
+                              });
+                            },
+                              child: const Icon(Icons.sync_outlined),
+                          ),
                           label: Text("Nomor Resi", style: kDefaultTextStyle(fontSize: 16),),
                           labelStyle: kDefaultTextStyle(fontSize: 16),
                             border: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.black))
                         ),
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        readOnly: true,
+                        onTap: (){
+                          productControllers.fetchProductItems();
+                          Get.defaultDialog(
+                            backgroundColor: Colors.white,
+                            title: "Daftar Buku",
+                            titleStyle: kDefaultTextStyle(color: Colors.black, fontSize: 16),
+                            titlePadding: const EdgeInsets.only(top: 15),
+                            content: Obx(
+                              () => productControllers.isLoading.value ? Center(
+                                child: floatingLoading(),
+                              ) : productControllers.productModels.length == 0 ? Container(
+                                alignment: Alignment.center,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(CupertinoIcons.person_2_square_stack, color: Colors.black,),
+                                    Text("Tidak ada daftar buku", style: kDefaultTextStyle(color: Colors.black),)
+                                  ],
+                                ),
+                              ) : SingleChildScrollView(
+                                  child: Column(
+                                    children: List.generate(
+                                      productControllers.productModels.length, (index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(bottom: 5),
+                                            child: ListTile(
+                                              tileColor: Colors.black12,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(7)
+                                              ),
+                                              dense: true,
+                                              title: Text(productControllers.productModels[index].nama ?? 'Tidak ada nama', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
+                                              onTap: () async {
+                                                setState(() {
+                                                  namaBuku.text = productControllers.productModels[index].nama ?? '';
+                                                  hargaBuku = productControllers.productModels[index].hargaJual ?? 0;
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          );
+                                        }
+                                    )
+                                  ),
+                                ),
+                              ),
+                          );
+                        },
+                        controller: namaBuku,
+                        decoration: InputDecoration(
+                          label: Text("Pilih Buku", style: kDefaultTextStyle(fontSize: 16),),
+                          labelStyle: kDefaultTextStyle(fontSize: 16),
+                            border: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black))
+                        ),
+                      ),
+                      TextField(
+                        onTap: (){
+                        },
+                        keyboardType: TextInputType.number,
+                        controller: jumlahBuku,
+                        decoration: InputDecoration(
+                          label: Text("Jumlah Buku", style: kDefaultTextStyle(fontSize: 16),),
+                          labelStyle: kDefaultTextStyle(fontSize: 16),
+                            border: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black))
+                        ),
+                      ),
+                      TextField(
+                        onTap: (){
+                        },
+                        keyboardType: TextInputType.number,
+                        controller: tarif,
+                        decoration: InputDecoration(
+                          prefixText: _currency,
+                          label: Text("Tarif", style: kDefaultTextStyle(fontSize: 16),),
+                          labelStyle: kDefaultTextStyle(fontSize: 16),
+                            border: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black))
+                        ),
+                        onChanged: (string) {
+                          realCurrency = string.replaceAll('.', '');
+                          string = _formatNumber(string.replaceAll('.', ''));
+                          tarif.value = TextEditingValue(
+                            text: string,
+                            selection: TextSelection.collapsed(offset: string.length),
+                          );
+                        },
                       ),
                       const SizedBox(height: 15),
                       Row(
@@ -264,6 +371,12 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                         nomorResi: nomorResiController.text,
                         saldoJatuhTempo: formatCurrencyId.format(5000000),
                         tanggalJatuhTempo: datePickedSampai,
+                        biaya: tarif.text,
+                        hargaBuku: formatCurrencyId.format(int.parse(hargaBuku.toString())).toString(),
+                        judulBuku: namaBuku.text,
+                        jumlahBuku: jumlahBuku.text,
+                        totalPembayaran: formatCurrencyId.format((hargaBuku * int.parse(jumlahBuku.text)) + int.parse(realCurrency!)),
+                        totalSemua: formatCurrencyId.format((hargaBuku * int.parse(jumlahBuku.text)) + int.parse(realCurrency!) + 6500),
                       ));
                       setState(() {
                         showPreview = true;
@@ -279,181 +392,6 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
           ),
         ),
       ],
-    );
-  }
-  
-  Container previewPDFContainer(){
-    return Container(
-      color: Colors.white,
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset('assets/icons/icon_revisi.png', width: 30, height: 30,),
-                  Text("Droidify Project", style: kDefaultTextStyle(fontWeight: FontWeight.bold),),
-                  Text("Indonesia", style: kDefaultTextStyle(fontWeight: FontWeight.normal),),
-                  Text("admin@droidify.com", style: kDefaultTextStyle(fontWeight: FontWeight.normal),),
-                ],
-              ),
-              const Spacer(),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text("FAKTUR", style: kDefaultTextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                  Text("#INV-284023", style: kDefaultTextStyle(fontWeight: FontWeight.bold),),
-                  Text("Saldo jatuh Tempo", style: kDefaultTextStyle(fontWeight: FontWeight.bold),),
-                  Text("IDR 5.000.000", style: kDefaultTextStyle(fontWeight: FontWeight.bold),),
-                ],
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Tanggal Faktur : $datePickedOrder"),
-                    const Text("Ketentuan : Due on Receipt"),
-                    Text("Tanggal Jatuh Tempo : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}"),
-                    Text("No. PO : SO-${getRandomString(10)}"),
-                    Text("No. Resi : $randomString"),
-                    Text("Ditagih kepada : ${namaCustomerController.text}"),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          randomString != null ? Container(
-            padding: const EdgeInsets.only(bottom: 10),
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                QrImageView(
-                  data: randomString!,
-                  version: QrVersions.auto,
-                  size: 130.0,
-                  semanticsLabel: "Droidfy",
-                  errorStateBuilder: (cxt, err) {
-                    return Container(
-                      color: Colors.transparent,
-                      child: const Center(
-                        child: Text(
-                          'Gagal generate QR Code',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                Text("$randomString"),
-              ],
-            ),
-          ) : 
-        const SizedBox(),
-          Table(
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            children: [
-              TableRow(
-                decoration: const BoxDecoration(
-                  color: Colors.black
-                ),
-                children: [
-                  TableCell(child: Text(" ID", style: kDefaultTextStyle(color: Colors.white, fontSize: 10))),
-                  TableCell(child: Text(" Item & Deskripsi", style: kDefaultTextStyle(color: Colors.white, fontSize: 10))),
-                  TableCell(child: Text(" Jumlah", style: kDefaultTextStyle(color: Colors.white, fontSize: 10))),
-                  TableCell(child: Text(" Harga", style: kDefaultTextStyle(color: Colors.white, fontSize: 10))),
-                  TableCell(child: Text(" Tarif", style: kDefaultTextStyle(color: Colors.white, fontSize: 10))),
-                  TableCell(child: Text("Total", style: kDefaultTextStyle(color: Colors.white, fontSize: 10))),
-                ]
-              ),
-              TableRow(
-                children: [
-                  TableCell(child: Text(" 1", style: kDefaultTextStyle(color: Colors.black, fontSize: 10))),
-                  TableCell(child: Text(" NF-01", style: kDefaultTextStyle(color: Colors.black, fontSize: 10))),
-                  TableCell(child: Text(" 10", style: kDefaultTextStyle(color: Colors.black, fontSize: 10))),
-                  TableCell(child: Text(" 184.029", style: kDefaultTextStyle(color: Colors.black, fontSize: 10))),
-                  TableCell(child: Text(" 13.000", style: kDefaultTextStyle(color: Colors.black, fontSize: 10))),
-                  TableCell(child: Text("197.029", style: kDefaultTextStyle(color: Colors.black, fontSize: 10))),
-                ]
-              )
-            ],
-          ),
-          const Divider(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                color: Colors.transparent,
-                width: MediaQuery.of(context).size.width / 1.5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Sub Total"),
-                        Text("IDR68.000"),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Expanded(child: Text("Metode Pembayaran", overflow: TextOverflow.clip)),
-                        Text(dropDownValueWeek,),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Total", style: kDefaultTextStyle(fontWeight: FontWeight.bold)),
-                        Text("IDR68.000", style: kDefaultTextStyle(fontWeight: FontWeight.bold),),
-                      ],
-                    ),
-                    Container(
-                      color: Colors.grey.shade300,
-                      child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Saldo jatuh tempo", style: kDefaultTextStyle(fontWeight: FontWeight.bold)),
-                        Text("IDR68.000", style: kDefaultTextStyle(fontWeight: FontWeight.bold),),
-                      ],
-                    ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          const Padding(
-            padding:  EdgeInsets.symmetric(vertical: 20.0,horizontal: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Catatan*"),
-                    Text("Terimakasih telah berbisnis dengan kami"),
-                  ],
-                )
-              ],
-            ),
-          )
-        ],
-      ),
     );
   }
 }

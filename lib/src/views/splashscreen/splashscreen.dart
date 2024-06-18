@@ -84,5 +84,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     } else {
       print(permissionStatusPhotos);
     }
+
+    final permissionStatusReadContact = await Permission.contacts.status;
+    if (permissionStatusReadContact.isDenied) {
+        await Permission.contacts.request();
+    } else if (permissionStatusReadContact.isPermanentlyDenied) {
+        await openAppSettings();
+    } else {
+      print(permissionStatusReadContact);
+    }
   }
 }
