@@ -292,4 +292,47 @@ class ProductControllers extends GetxController {
       return false;
     }
   }
+
+  Future<bool> orderInvoice({
+    String? invoiceKode,
+    int? itemID,
+    String? nomorResi,
+    int? customerID,
+    int? tarif,
+    String? tanggalOrder,
+    String? tanggalTagihan,
+    String? metodePembayaran,
+    String? nomorPO,
+    int? jumlahBuku,
+    int? totalTagihan
+  }) async {
+    isLoading(true);
+    try {
+      List result = await vars.client.from('invoice_order').insert(
+        {
+          'invoice_kode' : invoiceKode,
+          'item_id' : itemID,
+          'nomor_resi' : nomorResi,
+          'customer_id' : customerID,
+          'tarif' : tarif,
+          'tanggal_order' : tanggalOrder,
+          'tanggal_tagihan' : tanggalTagihan,
+          'metode_pembayaran' : metodePembayaran,
+          'nomor_po' : nomorPO,
+          'jumlah_buku' : jumlahBuku,
+          'total_tagihan' : totalTagihan
+          }
+        ).select();
+      if(result.length == 0){
+        return false;
+      }
+      print(result);
+      isLoading.value = false;
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+      return false;
+    }
+  }
 }

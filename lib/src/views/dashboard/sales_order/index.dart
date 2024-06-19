@@ -30,6 +30,8 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
   TextEditingController jumlahBuku = TextEditingController();
   TextEditingController tarif = TextEditingController();
   String? realCurrency;
+  int? customerID;
+  int? itemID;
   static const _locale = 'id';
   String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(int.parse(s));
   String get _currency => NumberFormat.compactSimpleCurrency(locale: _locale).currencySymbol;
@@ -129,6 +131,7 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                                               onTap: () async {
                                                 setState(() {
                                                   namaCustomerController.text = customerController.listCustomer[index]['nama'];
+                                                  customerID = customerController.listCustomer[index]['id'];
                                                 });
                                                 Navigator.pop(context);
                                               },
@@ -211,6 +214,7 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                                               title: Text(productControllers.productModels[index].nama ?? 'Tidak ada nama', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
                                               onTap: () async {
                                                 setState(() {
+                                                  itemID = productControllers.productModels[index].id;
                                                   namaBuku.text = productControllers.productModels[index].nama ?? '';
                                                   hargaBuku = productControllers.productModels[index].hargaJual ?? 0;
                                                 });
@@ -365,6 +369,9 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                       Get.snackbar("Gagal", "Data tidak boleh kosong, Mohon periksa ulang", backgroundColor: Colors.white);
                     }else{
                       Get.to(() => PDFPreview(
+                        customerID: customerID,
+                        itemID: itemID,
+                        kodeBuku: "NF-",
                         metodePembayaran: dropDownValueWeek,
                         namaCustomer: namaCustomerController.text,
                         nomorPO: getRandomInt(20),
@@ -372,9 +379,10 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                         saldoJatuhTempo: formatCurrencyId.format(5000000),
                         tanggalJatuhTempo: datePickedSampai,
                         biaya: tarif.text,
+                        totalTagihan: (hargaBuku * int.parse(jumlahBuku.text)) + int.parse(realCurrency!),
                         hargaBuku: formatCurrencyId.format(int.parse(hargaBuku.toString())).toString(),
                         judulBuku: namaBuku.text,
-                        jumlahBuku: jumlahBuku.text,
+                        jumlahBuku: int.parse(jumlahBuku.text),
                         totalPembayaran: formatCurrencyId.format((hargaBuku * int.parse(jumlahBuku.text)) + int.parse(realCurrency!)),
                         totalSemua: formatCurrencyId.format((hargaBuku * int.parse(jumlahBuku.text)) + int.parse(realCurrency!) + 6500),
                       ));

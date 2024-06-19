@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/global_variable.dart' as vars;
 
@@ -7,6 +6,7 @@ class CustomerController extends GetxController {
   var isLoading = false.obs;
   var alamatTagihan = ''.obs;
   var kode_pos_alamat_tagihan = ''.obs;
+  var urlPhotoSupabase = ''.obs;
   var alamatPengiriman = ''.obs;
   var kode_pos_alamat_pengiriman = ''.obs;
   var listCustomer = [].obs;
@@ -98,5 +98,26 @@ class CustomerController extends GetxController {
     }
   }
 
-  
+  // uploadImageProfile(context, {ImageSource? media}) async {
+  //   isLoading.value = true;
+  //   XFile? image;
+  //   final ImagePicker picker = ImagePicker();
+  //   var img = await picker.pickImage(source: media!);
+  //   image = img;
+  //   final avatarFile = File(image!.path);
+  //   final fileExt = avatarFile.path.split('.').last;
+  //   String? nameFile = "${DateTime.now().toIso8601String()} + $fileExt";
+  //   try {
+  //     await vars.client.storage.from('image_profile').upload('public/$nameFile', avatarFile, fileOptions: const FileOptions(cacheControl: '3600', upsert: false));
+  //     var resultPulicURL = vars.client.storage.from('invoices').getPublicUrl('public/$nameFile');
+  //     // print(resultPulicURL);
+  //     String? fullURL = urlPhotoSupabase.value + resultPulicURL;
+  //     await vars.client.from('cr_profiles').update({'url_profile': fullURL}).eq('user_uuid', id);
+  //     isLoading.value = false;
+  //   } catch (e) {
+  //     print(e);
+  //     isLoading.value = false;
+  //   }
+  //   isLoading.value = false;
+  // }
 }
