@@ -7,6 +7,7 @@ import 'package:warehouseapp/src/components/global_variable.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/account_controller.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
+import 'package:warehouseapp/src/helpers/currencies/format_currency.dart';
 import 'package:warehouseapp/src/models/data_chart_models.dart';
 import 'package:warehouseapp/src/views/dashboard/home/contacts.dart';
 import 'package:warehouseapp/src/views/dashboard/item/index.dart';
@@ -53,17 +54,19 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     tooltip = TooltipBehavior(enable: true);
+    // productControllers.soldQuantities();
+    // productControllers.purchasedQuantities();
+    // productControllers.totalEarnings().then((value) => setState(() {
+    //   totalEarnings = value;
+    // }));
+    // productControllers.totalSpendings().then((value) => setState(() {
+    //   totalSpendings = value;
+    // }));
+    super.initState();
     accountController.getPersonContact();
     productControllers.fetchProductItems();
     productControllers.soldQuantities();
     productControllers.purchasedQuantities();
-    productControllers.totalEarnings().then((value) => setState(() {
-      totalEarnings = value;
-    }));
-    productControllers.totalSpendings().then((value) => setState(() {
-      totalSpendings = value;
-    }));
-    super.initState();
   }
 
 
@@ -79,16 +82,16 @@ class _HomePageState extends State<HomePage> {
         ];
     return RefreshIndicator(
       onRefresh: () async {
-        await productControllers.fetchProductItems();
-        await accountController.getPersonContact();
-        await productControllers.soldQuantities();
-        await productControllers.purchasedQuantities();
-        await productControllers.totalEarnings().then((value) => setState(() {
-          totalEarnings = value;
-        }));
-        await productControllers.totalSpendings().then((value) => setState(() {
-          totalSpendings = value;
-        }));
+        // await productControllers.fetchProductItems();
+        // await accountController.getPersonContact();
+        // await productControllers.soldQuantities();
+        // await productControllers.purchasedQuantities();
+        // await productControllers.totalEarnings().then((value) => setState(() {
+        //   totalEarnings = value;
+        // }));
+        // await productControllers.totalSpendings().then((value) => setState(() {
+        //   totalSpendings = value;
+        // }));
         setState(() {});
       },
       child: Scaffold(
@@ -111,23 +114,23 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Summary", style: kDefaultTextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                          DropdownButton(
-                            borderRadius: BorderRadius.circular(15),
-                            underline: const SizedBox(),
-                            value: dropDownValueToday,                           
-                            icon: const Icon(Icons.keyboard_arrow_down),     
-                            items: itemsToday.map((String items) { 
-                              return DropdownMenuItem( 
-                                value: items, 
-                                child: Text(items), 
-                              ); 
-                            }).toList(), 
-                            onChanged: (String? newValue) {  
-                              setState(() { 
-                                dropDownValueToday = newValue!; 
-                              }); 
-                            }, 
-                          ),
+                          // DropdownButton(
+                          //   borderRadius: BorderRadius.circular(15),
+                          //   underline: const SizedBox(),
+                          //   value: dropDownValueToday,                           
+                          //   icon: const Icon(Icons.keyboard_arrow_down),     
+                          //   items: itemsToday.map((String items) { 
+                          //     return DropdownMenuItem( 
+                          //       value: items, 
+                          //       child: Text(items), 
+                          //     ); 
+                          //   }).toList(), 
+                          //   onChanged: (String? newValue) {  
+                          //     setState(() { 
+                          //       dropDownValueToday = newValue!; 
+                          //     }); 
+                          //   }, 
+                          // ),
                         ],
                       ),
                       const SizedBox(height: 30),
@@ -145,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Text("Sold Quantities", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
                                     Obx(() => productControllers.isLoading.value ? const CupertinoActivityIndicator() :
-                                      Text(productControllers.totalSoldQuantities.value.toString(), style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17))),
+                                      Text(productControllers.soldModels.length.toString(), style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17))),
                                   ],
                                 ),
                               ),
@@ -156,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("Earnings", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
-                                    Text("Rp.${totalEarnings ?? 0}", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
+                                    Obx(() => Text(formatCurrencyId.format(productControllers.totalSoldQuantities.value), style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17))),
                                   ],
                                 ),
                               )
@@ -172,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Text("Purchased Quantities", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
                                     Obx(() => productControllers.isLoading.value ? const CupertinoActivityIndicator() :
-                                     Text(productControllers.totalPurcashedQuantities.value.toString(), style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17))),
+                                     Text(productControllers.purcashedHistoryModels.length.toString(), style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17))),
                                   ],
                                 ),
                               ),
@@ -183,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text("Spendings", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
-                                    Text("Rp.${totalSpendings ?? 0}", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17)),
+                                    Obx(() => Text("Rp.${formatCurrencyId.format(productControllers.totalPurcashedQuantities.value)}", style: kDefaultTextStyle(fontWeight: FontWeight.normal, fontSize: 17))),
                                   ],
                                 ),
                               )
@@ -293,25 +296,25 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Analytics", style: kDefaultTextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),),
-                    DropdownButton(
-                      borderRadius: BorderRadius.circular(15),
-                      underline: const SizedBox(),
-                      style: kDefaultTextStyle(fontSize: 14, color: Colors.white),
-                      dropdownColor: Colors.black.withOpacity(0.9),
-                      value: dropDownValueWeek,                           
-                      icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white,),
-                      items: itemsWeek.map((String items) { 
-                        return DropdownMenuItem( 
-                          value: items, 
-                          child: Text(items), 
-                        ); 
-                      }).toList(), 
-                      onChanged: (String? newValue) {  
-                        setState(() { 
-                          dropDownValueWeek = newValue!; 
-                        }); 
-                      }, 
-                    ),
+                    // DropdownButton(
+                    //   borderRadius: BorderRadius.circular(15),
+                    //   underline: const SizedBox(),
+                    //   style: kDefaultTextStyle(fontSize: 14, color: Colors.white),
+                    //   dropdownColor: Colors.black.withOpacity(0.9),
+                    //   value: dropDownValueWeek,                           
+                    //   icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white,),
+                    //   items: itemsWeek.map((String items) { 
+                    //     return DropdownMenuItem( 
+                    //       value: items, 
+                    //       child: Text(items), 
+                    //     ); 
+                    //   }).toList(), 
+                    //   onChanged: (String? newValue) {  
+                    //     setState(() { 
+                    //       dropDownValueWeek = newValue!; 
+                    //     }); 
+                    //   }, 
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 10),

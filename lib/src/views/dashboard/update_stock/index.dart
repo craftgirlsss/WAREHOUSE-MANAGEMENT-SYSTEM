@@ -21,10 +21,18 @@ class UpdateStockPage extends StatefulWidget {
 
 class _UpdateStockPageState extends State<UpdateStockPage> {
   String? itemSelected;
+  int? vendorID;
   TextEditingController namaVendorController = TextEditingController();
+  TextEditingController catatanController = TextEditingController();
   CustomerController customerController = Get.put(CustomerController());
   ProductControllers productControllers = Get.find();
-  String? datePicked;
+  String? datePicked = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+  @override
+  void dispose() {
+    namaVendorController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -87,7 +95,9 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                                                 setState(() {
                                                   namaVendorController.text = customerController.listVendor[index]['nama'];
                                                   productControllers.vendorNameItemSelected.value = customerController.listVendor[index]['nama'];
+                                                  vendorID = customerController.listVendor[index]['id'];
                                                 });
+                                                print("ini vendor ID : $vendorID");
                                                 Navigator.pop(context);
                                               },
                                             ),
@@ -130,30 +140,33 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                   ),
                 ),
                 const SizedBox(height: 15),
-                ListTile(
-                  onTap: (){
-                    Get.to(() => const SelectItems());
-                  },
-                  shape: RoundedRectangleBorder( //<-- SEE HERE
-                    side: const BorderSide(width: 0.2),
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  tileColor: Colors.white.withOpacity(0.7),
-                  title: Obx(() => Text("${productControllers.itemNameSelected.value == '' ? "Select Item" : productControllers.itemNameSelected.value}", style: kDefaultTextStyle(fontSize: 14))),
-                  trailing: Obx(() => Container(
-                      width: 100,
-                      color: Colors.transparent,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(productControllers.itemCountSelected.value.toString(), overflow: TextOverflow.ellipsis, maxLines: 1, style: kDefaultTextStyle(fontSize: 12),),
-                          Expanded(child: Text(" x ${productControllers.priceBook.value}", overflow: TextOverflow.ellipsis, maxLines: 1, style: kDefaultTextStyle(fontSize: 12),)),
-                          Icon(Icons.keyboard_arrow_right_rounded),
-                        ],
-                      ),
+                Obx(() => ListTile(
+                    onTap: productControllers.isLoading.value ? (){} : ()async{
+                      await productControllers.fetchProductItems().then((value) {
+                        Get.to(() => const SelectItems());
+                      });
+                    },
+                    shape: RoundedRectangleBorder( //<-- SEE HERE
+                      side: const BorderSide(width: 0.2),
+                      borderRadius: BorderRadius.circular(13),
                     ),
-                  ), 
+                    tileColor: Colors.white.withOpacity(0.7),
+                    title: Obx(() => Text(productControllers.itemNameSelected.value == '' ? "Select Item" : productControllers.itemNameSelected.value, style: kDefaultTextStyle(fontSize: 14))),
+                    trailing: Obx(() => Container(
+                        width: 100,
+                        color: Colors.transparent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(productControllers.itemCountSelected.value.toString(), overflow: TextOverflow.ellipsis, maxLines: 1, style: kDefaultTextStyle(fontSize: 12),),
+                            Expanded(child: Text(" x ${productControllers.priceBook.value}", overflow: TextOverflow.ellipsis, maxLines: 1, style: kDefaultTextStyle(fontSize: 12),)),
+                            const Icon(Icons.keyboard_arrow_right_rounded),
+                          ],
+                        ),
+                      ),
+                    ), 
+                  ),
                 ),
                 const SizedBox(height: 15),
                 Container(
@@ -173,10 +186,8 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                             borderSide: BorderSide(color: Colors.black))
                       ),
                     ) : TextField(
+                      controller: catatanController,
                       maxLines: 1,
-                      onChanged: (value) {
-                        productControllers.notesitemSelected.value = value;
-                      },
                       decoration: InputDecoration(
                         label: Text("Notes", style: kDefaultTextStyle(fontSize: 16),),
                         labelStyle: kDefaultTextStyle(fontSize: 16),
@@ -189,19 +200,31 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                 const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
-                  child: kDeafultButton(
-                    onPressed: (){
-                      if(productControllers.vendorNameItemSelected.value == '' 
-                        || productControllers.dateItemSelected.value == '' 
-                        || productControllers.notesitemSelected.value == '' 
-                        || productControllers.itemNameSelected.value == '' 
-                        || productControllers.itemCountSelected.value < 2){
-                          Get.snackbar("Gagal", "Mohon isi semua field dan pastikan jumlah barang tidak kurang dari 2", backgroundColor: Colors.white);
-                        }else{
-                          productControllers.updateStock();
-                        }
-                    },
-                    title: "Save"
+                  child: Obx(() => kDeafultButton(
+                      onPressed: productControllers.isLoading.value ? (){} : ()async{
+                        if(productControllers.itemCountSelected.value < 1){
+                            Get.snackbar("Gagal", "Mohon isi semua field dan pastikan jumlah barang tidak kurang dari 2", backgroundColor: Colors.white);
+                          }else{
+                            // productControllers.updateStock();
+                            if(await productControllers.postHistoryUpdateStock(
+                              vendorID: vendorID,
+                              transactionDate: datePicked,
+                              itemID: productControllers.idItemSelected.value,
+                              jumlahItem: productControllers.itemCountSelected.value,
+                              notes: catatanController.text,
+                              totalHarga: productControllers.itemCountSelected.value * productControllers.priceBook.value
+                            )){
+                              catatanController.clear();
+                              productControllers.itemCountSelected.value = 0;
+                              productControllers.priceBook.value = 0;
+                              productControllers.idItemSelected.value = 0;
+                              vendorID = null;
+                              Get.snackbar("Berhasil", "Berhasil menambah stok buku");
+                            }
+                          }
+                      },
+                      title: "Save"
+                    ),
                   ),
                 ),
               ],

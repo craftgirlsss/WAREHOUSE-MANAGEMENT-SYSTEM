@@ -68,50 +68,6 @@ class _ContactPageState extends State<ContactPage> {
                               Get.to(() => const AddingContactPage());
                             }, icon: const Icon(Icons.add, color: Colors.white))
                         ],
-                        bottom: PreferredSize(
-                          preferredSize: const Size.fromHeight(60), 
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: SizedBox(
-                                    height: 50,
-                                    child: TextField(
-                                      style: kDefaultTextStyle(),
-                                      textAlign: TextAlign.start,
-                                      decoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.symmetric(vertical: 3),
-                                        hintText: "Search Contact",
-                                        prefixIcon: const Icon(CupertinoIcons.search),
-                                        hintStyle: kDefaultTextStyle(),                                
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(25)
-                                        )
-                                      ),
-                                    ),
-                                  )
-                                ),
-                                GestureDetector(
-                                  onTap: (){},
-                                  child: Container(
-                                    color: Colors.transparent,
-                                    child: const Row(
-                                      children: [
-                                        Icon(CupertinoIcons.arrow_up_down,size: 25,
-                                          color: Colors.white,),
-                                        Icon(CupertinoIcons.text_alignleft, size: 25,
-                                          color: Colors.white,)
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
                       ),
                       SliverList.builder(
                         itemCount: accountController.listContacts.length,

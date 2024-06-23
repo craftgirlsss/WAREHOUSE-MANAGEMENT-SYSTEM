@@ -1,7 +1,9 @@
 class ProductModels {
-  int? id, stockAwal, stockMinimal, hargaJual, hargaBeli;
+  int? id, stockAwal, stockMinimal, hargaJual, hargaBeli, jumlahStockSaatIni;
   String? nama, keterangan, createdAt, sku, penerbit;
   Kategori? toko;
+  bool? deleted;
+  
 
   ProductModels(
       {this.id,
@@ -14,7 +16,9 @@ class ProductModels {
       this.createdAt,
       this.keterangan,
       this.toko,
-      this.sku
+      this.deleted,
+      this.sku,
+      this.jumlahStockSaatIni
       });
 
   factory ProductModels.fromJson(Map<String, dynamic> json) {
@@ -27,6 +31,8 @@ class ProductModels {
         stockAwal: json['stock_awal'] ?? 0,
         hargaBeli: json['harga_beli'],
         hargaJual: json['harga_jual'],
+        deleted: json['deleted'],
+        jumlahStockSaatIni: json['jumlah_stock_saat_ini'],
         createdAt: json['created_at'].toString(),
         keterangan: json['keterangan'] ?? '0',
         toko: json['kategori'] != null

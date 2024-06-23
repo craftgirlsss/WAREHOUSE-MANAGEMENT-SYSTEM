@@ -31,23 +31,27 @@ class CustomerController extends GetxController {
     isLoading(true);
 
     try {
-      List result = await vars.client.from('customer').insert(
+      List? result = await vars.client.from('customer').insert(
         {
-          'nama' : nama,
+          'nama' : nama ?? 'Unknown name',
           'kode' : getRandomString(6),
-          'no_telp' : phoneNumber,
-          'email' : email,
-          'alamat' : alamat,
-          'nama_perusahaan' : namaPerusahaan,
-          'tipe_customer' : tipeCostumer ?? 'perusahaan',
-          'npwp' : npwp,
-          'alamat_tagihan' : alamatTagihan.value,
-          'kode_pos_alamat_tagihan' : kode_pos_alamat_tagihan.value,
-          'kode_pos_alamat_pengiriman' : alamatPengiriman.value,
-          'alamat_pengiriman' : kode_pos_alamat_pengiriman.value
+          'no_telp' : phoneNumber ?? 'Unknown phone number',
+          'email' : email ?? 'Not Set',
+          'alamat' : alamat ?? 'Not Set',
+          'nama_perusahaan' : namaPerusahaan ?? 'Unknown',
+          'tipe_customer' : tipeCostumer ?? 'Perusahaan',
+          'npwp' : npwp ?? '0',
+          'alamat_tagihan' : alamatTagihan.value == '' ? 'Address not set' : alamatTagihan.value,
+          'kode_pos_alamat_tagihan' : kode_pos_alamat_tagihan.value == '' ? 'Postal Code not set' : kode_pos_alamat_tagihan.value,
+          'kode_pos_alamat_pengiriman' : alamatPengiriman.value == '' ? 'Address not set' : alamatPengiriman.value,
+          'alamat_pengiriman' : kode_pos_alamat_pengiriman.value == '' ? 'Postal Code not set' : kode_pos_alamat_pengiriman.value
           }
         ).select();
       print(result);
+      if(result.isEmpty){
+        isLoading.value = false;
+        return false;
+      }
       isLoading.value = false;
       return true;
     } catch (e) {
@@ -88,12 +92,37 @@ class CustomerController extends GetxController {
         mapItem['type'] = 'vendor';
         return mapItem;
       }).toList());
-      print(resultVendor);
+      print("ini result vendor $resultVendor");
       isLoading.value = false;
       return true;
     } catch (e) {
       print(e);
       isLoading.value = false;
+      return false;
+    }
+  }
+
+  Future<bool> addVendor({String? nama, String? phone, String? email, String? alamat}) async {
+    isLoading(true);
+    try {
+      List? result = await vars.client.from('vendor').insert([{
+          'nama' : nama ?? 'Unknonwn name',
+          'kode' : getRandomString(6),
+          'no_telp' : phone ?? 'Unknown phone number',
+          'email' : email ?? 'Email not set',
+          'alamat' : alamat ?? 'Address not set'
+        }]
+      ).select();
+      print(result);
+      if(result.isEmpty){
+        isLoading(false);
+        return false;
+      }
+      isLoading(false);
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading(false);
       return false;
     }
   }

@@ -77,39 +77,39 @@ class _SettingsTabState extends State<SettingsTab> {
   }
 
   Future<void> _showMyDialog() async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false, // user must tap button!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Logout'),
-        content: const SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text('Apakah anda yakin ingin keluar?'),
-            ],
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Apakah anda yakin ingin keluar?'),
+              ],
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('YA'),
-            onPressed: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.remove('loggedIn');
-              await vars.client.auth.signOut().then((value) {                
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false); 
-              });
-            },  
-          ),
-          TextButton(
-            child: const Text('TIDAK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },  
-          ),
-        ],
-      );
-    },
-  );
-}
+          actions: <Widget>[
+            TextButton(
+              child: const Text('YA'),
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.remove('loggedIn');
+                await vars.client.auth.signOut().then((value) {                
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false); 
+                });
+              },  
+            ),
+            TextButton(
+              child: const Text('TIDAK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },  
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

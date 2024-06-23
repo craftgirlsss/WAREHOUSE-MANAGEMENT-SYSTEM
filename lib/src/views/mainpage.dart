@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
+import 'package:warehouseapp/src/views/dashboard/history/select_menu_history.dart';
 import 'package:warehouseapp/src/views/dashboard/home/index.dart';
 import 'package:warehouseapp/src/views/dashboard/item/index.dart';
-import 'package:warehouseapp/src/views/dashboard/sales_order/add_new_customer.dart';
 import 'package:warehouseapp/src/views/dashboard/update_stock/index.dart';
-import 'dashboard/history/index.dart';
 import 'dashboard/item/add_item.dart';
 import 'dashboard/sales_order/index.dart';
 import 'dashboard/settings/index.dart';
@@ -32,7 +31,7 @@ class _MainPageState extends State<MainPage> {
     const SalesOrderPage(),
     const UpdateStockPage(),
     const TrackingBarcode(),
-    const StockHistory(),
+    const SelectHistoryPage(),
     const SettingsTab(),
   ];
 
@@ -56,22 +55,7 @@ class _MainPageState extends State<MainPage> {
         title: Text(nameAppBar, style: kDefaultTextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
         backgroundColor: Colors.indigo.shade800,
         actions: [
-          if(selectedIndex == 3)
-            Obx(() => TextButton(
-              onPressed: productControllers.isLoading.value ? (){} : (){
-                if(productControllers.vendorNameItemSelected.value == '' 
-                || productControllers.dateItemSelected.value == '' 
-                || productControllers.notesitemSelected.value == '' 
-                || productControllers.itemNameSelected.value == '' 
-                || productControllers.itemCountSelected.value < 2){
-                  Get.snackbar("Gagal", "Mohon isi semua field dan pastikan jumlah barang tidak kurang dari 2", backgroundColor: Colors.white);
-                }else{
-                  productControllers.updateStock();
-                }
-              }, 
-              child: Text("Save", style: kDefaultTextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),)),
-            ) 
-          else if(selectedIndex == 1)
+          if(selectedIndex == 1)
             IconButton(
               onPressed: (){
                 Get.to(() => const AddItems());
@@ -184,7 +168,7 @@ class _MainPageState extends State<MainPage> {
               title: Text('History', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
                 setState(() {
-                  nameAppBar = "Stock History";
+                  nameAppBar = "History";
                   onItemTapped(5);
                   Navigator.pop(context);
                 });

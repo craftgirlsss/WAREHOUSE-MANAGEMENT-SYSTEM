@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
+import 'package:warehouseapp/src/components/dialogs/cupertino_dialogs.dart';
+import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/currencies/format_currency.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 import 'package:warehouseapp/src/views/dashboard/item/edit_item.dart';
@@ -25,6 +28,7 @@ class ItemDetail extends StatefulWidget {
 }
 
 class _ItemDetailState extends State<ItemDetail> {
+  ProductControllers productControllers = Get.find();
   
   @override
   Widget build(BuildContext context) {
@@ -60,7 +64,29 @@ class _ItemDetailState extends State<ItemDetail> {
                 tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               ),
                 actions: [
-                  IconButton(onPressed: (){}, icon: const Icon(Icons.delete, color: Colors.white)),
+                  Obx(() => IconButton(
+                    onPressed: productControllers.isLoading.value ? (){} : (){
+                      showMyDialog(
+                        content: "Apakah anda yakin menghapus item?",
+                        context: context,
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          productControllers.deleteItems(widget.id!).then((value){
+                            if(value){
+                              productControllers.fetchProductItems().then((value) {
+                                Get.snackbar('Berhasil', "Berhasil menghapus item", backgroundColor: Colors.white);
+                                Navigator.pop(context);
+                              });
+                            }else{
+                              Get.snackbar('Gagal', "Gagal menghapus item", backgroundColor: Colors.white);
+                            }
+                          }); 
+                        },
+                        title: "Hapus Item"
+                      );
+                    },
+                    icon: const Icon(Icons.delete, color: Colors.white)),
+                  ),
                   IconButton(onPressed: (){
                     Get.to(() => EditItem(
                       id: widget.id,
@@ -74,7 +100,6 @@ class _ItemDetailState extends State<ItemDetail> {
                       skuItem: widget.sku,
                     ));
                   }, icon: const Icon(Icons.edit, color: Colors.white)),
-                  IconButton(onPressed: (){}, icon: const Icon(Icons.more_vert_outlined, color: Colors.white)),
               ],
             ),
             body: SingleChildScrollView(
@@ -125,9 +150,9 @@ class _ItemDetailState extends State<ItemDetail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Selling Price : ${formatCurrencyId.format(widget.sellingPrice ?? 0)}"),
+                        Text("Harga Jual : ${formatCurrencyId.format(widget.sellingPrice ?? 0)}"),
                         const SizedBox(height: 5),
-                        Text("Cost Price : ${formatCurrencyId.format(widget.costPrice ?? 0)}"),
+                        Text("Harga Beli : ${formatCurrencyId.format(widget.costPrice ?? 0)}"),
                       ],
                     ),
                   ),
@@ -182,6 +207,9 @@ class _ItemDetailState extends State<ItemDetail> {
             ),
           ),
         ),
+        Obx(() => productControllers.isLoading.value == true
+            ? floatingLoading()
+            : const SizedBox()),
       ],
     );
   }

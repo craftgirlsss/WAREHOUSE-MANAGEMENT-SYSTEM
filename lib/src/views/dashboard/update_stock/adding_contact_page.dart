@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/appbars/default_appbar.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/global_variable.dart';
+import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/account_controller.dart';
+import 'package:warehouseapp/src/controllers/customer_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 class AddingContactPage extends StatefulWidget {
@@ -17,6 +21,8 @@ class AddingContactPage extends StatefulWidget {
 class _AddingContactPageState extends State<AddingContactPage> {
   TextEditingController contactNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
+  CustomerController customerController = Get.put(CustomerController());
+  AccountController accountController = Get.find();
   String? datePicked;
   Dataperson? dataperson = Dataperson.customer;
   PhoneContact? phoneContact;
@@ -25,6 +31,7 @@ class _AddingContactPageState extends State<AddingContactPage> {
   @override
   void dispose() {
     contactNameController.dispose();
+    contactNumberController.dispose();
     super.dispose();
   }
   @override
@@ -37,7 +44,39 @@ class _AddingContactPageState extends State<AddingContactPage> {
           child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: kDefaultAppBar(context, title: "Create Contact", actions: [
-              TextButton(onPressed: (){}, child: Text("Save", style: kDefaultTextStyle(color: Colors.white, fontSize: 16),))
+              Obx(() => TextButton(
+                onPressed: customerController.isLoading.value ? (){} : () async {
+                  if(contactNameController.text == '' || contactNumberController.text == ''){
+                    Get.snackbar('Gagal', "Mohon isi semua field", backgroundColor: Colors.white);
+                  }else{
+                    if(dataperson == Dataperson.customer){
+                      if(await customerController.addCustomer(nama: contactNameController.text, phoneNumber: contactNumberController.text)){
+                        Get.snackbar('Berhasil', "Berhasil menambah kontak customer", backgroundColor: Colors.white);
+                        Future.delayed(Duration.zero, ()async{
+                          await accountController.getPersonContact();
+                          Navigator.pop(context);
+                        });
+                      }else{
+                        Get.snackbar('Gagal', "Gagal menambah kontak customer", backgroundColor: Colors.white);
+                      }
+                    }else if(dataperson == Dataperson.vendor){
+                      if(await customerController.addVendor(
+                        nama: contactNameController.text, phone: contactNameController.text)){
+                        Get.snackbar('Berhsil', "Berhasil menambah kontak vendor", backgroundColor: Colors.white);
+                        Future.delayed(Duration.zero, ()async{
+                          await accountController.getPersonContact();
+                          Navigator.pop(context);
+                        });
+                      }else{
+                        Get.snackbar('Gagal', "Gagal menambah kontak vendor", backgroundColor: Colors.white);
+                      }
+                    }else{
+                      Get.snackbar('Gagal', "Gagal menambah kontak vendor atau customer", backgroundColor: Colors.white);
+                    }
+                  }
+                }, 
+                child: Text("Save", style: kDefaultTextStyle(color: Colors.white, fontSize: 16),)),
+              )
             ], withAction: true),
             body: ListView(
               padding: GlobalVariable.defaultPadding,
@@ -122,6 +161,9 @@ class _AddingContactPageState extends State<AddingContactPage> {
             ),
           ),
         ),
+        Obx(() => customerController.isLoading.value == true
+            ? floatingLoading()
+            : const SizedBox()),
       ],
     );
   }

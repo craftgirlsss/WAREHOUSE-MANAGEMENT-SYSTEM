@@ -5,28 +5,37 @@ import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
 
 class SelectAndAddItems extends StatefulWidget {
+  final int? index;
   final String? title;
   final int? subtitleJumlahBuku;
   final int? item;
   final Function()? onPressed;
-  const SelectAndAddItems({super.key, this.item, this.title, this.subtitleJumlahBuku, this.onPressed});
+  const SelectAndAddItems({super.key, this.item, this.title, this.subtitleJumlahBuku, this.onPressed, this.index});
 
   @override
   State<SelectAndAddItems> createState() => _SelectAndAddItemsState();
 }
 
 class _SelectAndAddItemsState extends State<SelectAndAddItems> {
+  TextEditingController itemCountController = TextEditingController();
   ProductControllers productControllers = Get.find();
   int item = 0;
 
   @override
   void initState() {
+    itemCountController.text = '0';
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    itemCountController.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 7),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 7),
         onTap: widget.onPressed,
         shape: RoundedRectangleBorder( //<-- SEE HERE
           side: const BorderSide(width: 0.2),
@@ -55,19 +64,38 @@ class _SelectAndAddItemsState extends State<SelectAndAddItems> {
                   onPressed: productControllers.isLoading.value ? (){} : (){
                     setState(() {
                       item = item - 1;
-                      productControllers.itemCountSelected.value = item;
+                      itemCountController.text = item.toString();
+                      productControllers.itemCountSelected.value = int.parse(itemCountController.text);
                     });
                   },
                   icon: const Icon(Icons.remove, color: Colors.white)),
                 ),
               ),
-              Text(item.toString(), style: kDefaultTextStyle(fontSize: 12, color: Colors.white),),
+              Expanded(
+                child: TextField(
+                  decoration: const InputDecoration(
+                    hintText: '0',
+                    hintStyle: TextStyle(color: Colors.white)
+                  ),
+                  textAlign: TextAlign.center,
+                  onChanged: (value) {
+                    if(value != ''){
+                      productControllers.itemCountSelected.value = int.parse(value);
+                    }
+                  },
+                  controller: itemCountController, 
+                  cursorColor: Colors.white,
+                  keyboardType: TextInputType.number,
+                  style: kDefaultTextStyle(fontSize: 12, color: Colors.white),
+                )
+              ),
               Expanded(
                 child: Obx(() => IconButton(
                   onPressed: productControllers.isLoading.value ? (){} : (){
                     setState(() {
                       item = item + 1;
-                      productControllers.itemCountSelected.value = item;
+                      itemCountController.text = item.toString();
+                      productControllers.itemCountSelected.value = int.parse(itemCountController.text);
                     });
                   },
                   icon: const Icon(Icons.add, color: Colors.white)),
@@ -88,10 +116,20 @@ class _SelectAndAddItemsState extends State<SelectAndAddItems> {
         //   ],
         // ),                            
         title: Text(widget.title ?? 'Unknown', overflow: TextOverflow.ellipsis, maxLines: 1, style: kDefaultTextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
-        subtitle: Row(
+        subtitle: Column(
           children: [
-            const Icon(Icons.book, color: GlobalVariable.mainColor, size: 13),
-            Text(widget.subtitleJumlahBuku.toString()),
+            Row(
+              children: [
+                const Icon(Icons.book, color: GlobalVariable.mainColor, size: 13),
+                Text("Stok : ${widget.subtitleJumlahBuku.toString()}"),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text("Harga beli : ${productControllers.productModels[widget.index ?? 0].hargaBeli}"),
+              ],
+            )
           ],
         ),
     );

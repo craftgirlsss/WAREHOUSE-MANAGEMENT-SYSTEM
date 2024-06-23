@@ -6,6 +6,7 @@ import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
+import 'package:warehouseapp/src/views/dashboard/settings/add_category.dart';
 
 class AddItems extends StatefulWidget {
   const AddItems({super.key});
@@ -17,12 +18,10 @@ class AddItems extends StatefulWidget {
 class _AddItemsState extends State<AddItems> {
   ProductControllers productControllers = Get.find();
   TextEditingController namaItemController = TextEditingController();
-  TextEditingController skuItemController = TextEditingController();
   TextEditingController openingStockItemController = TextEditingController();
   TextEditingController namaPenerbitItemController = TextEditingController();
   TextEditingController categoryItemController = TextEditingController();
   TextEditingController hargaPenjualanItemController = TextEditingController();
-  TextEditingController biayaItemController = TextEditingController();
   TextEditingController hargaBeliItemController = TextEditingController();
   TextEditingController stockMinimal = TextEditingController();
   int? categorySelected;
@@ -30,12 +29,10 @@ class _AddItemsState extends State<AddItems> {
   @override
   void dispose() {
     namaItemController.dispose();
-    skuItemController.dispose();
     openingStockItemController.dispose();
     namaPenerbitItemController.dispose();
     categoryItemController.dispose();
     hargaPenjualanItemController.dispose();
-    biayaItemController.dispose();
     super.dispose();
   }
   @override
@@ -69,10 +66,7 @@ class _AddItemsState extends State<AddItems> {
                       || hargaPenjualanItemController.text.isEmpty
                       || namaPenerbitItemController.text.isEmpty
                       || openingStockItemController.text.isEmpty
-                      || namaPenerbitItemController.text.isEmpty
-                      || skuItemController.text.isEmpty
                       || hargaBeliItemController.text.isEmpty
-                      || stockMinimal.text.isEmpty
                       ){
                         Get.snackbar("Gagal", "Mohon isi semua field yang tersedia", backgroundColor: Colors.white);
                       }else{
@@ -83,7 +77,6 @@ class _AddItemsState extends State<AddItems> {
                           namaPenerbitItem: namaPenerbitItemController.text,
                           openingStock: int.parse(openingStockItemController.text),
                           penerbit: namaPenerbitItemController.text,
-                          sku: skuItemController.text
                         )){
                           Get.snackbar("Berhasil", "Berhasil menambah item", backgroundColor: Colors.white);
                           Future.delayed(const Duration(seconds: 1), (){
@@ -102,38 +95,38 @@ class _AddItemsState extends State<AddItems> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 20),
-                  Center(
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(image: AssetImage('assets/images/empty_image.png'), fit: BoxFit.cover)
-                            ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: GestureDetector(
-                              onTap: (){},
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle
-                                ),
-                                child: const Icon(CupertinoIcons.camera_fill, color: Colors.black54),
-                              ),
-                            ))
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
+                  // Center(
+                  //   child: Container(
+                  //     color: Colors.transparent,
+                  //     child: Stack(
+                  //       children: [
+                  //         Container(
+                  //           width: 100,
+                  //           height: 100,
+                  //           decoration: const BoxDecoration(
+                  //             shape: BoxShape.circle,
+                  //             image: DecorationImage(image: AssetImage('assets/images/empty_image.png'), fit: BoxFit.cover)
+                  //           ),
+                  //         ),
+                  //         Positioned(
+                  //           right: 0,
+                  //           bottom: 0,
+                  //           child: GestureDetector(
+                  //             onTap: (){},
+                  //             child: Container(
+                  //               padding: const EdgeInsets.all(5),
+                  //               decoration: const BoxDecoration(
+                  //                 color: Colors.white,
+                  //                 shape: BoxShape.circle
+                  //               ),
+                  //               child: const Icon(CupertinoIcons.camera_fill, color: Colors.black54),
+                  //             ),
+                  //           ))
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 30),
                   Container(
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
@@ -146,12 +139,6 @@ class _AddItemsState extends State<AddItems> {
                           controller: namaItemController,
                           decoration: const InputDecoration(
                             label: Text("Nama Item"),
-                          ),
-                        ),
-                        TextField(
-                          controller: skuItemController,
-                          decoration: const InputDecoration(
-                            label: Text("SKU"),
                           ),
                         ),
                         TextField(
@@ -195,25 +182,25 @@ class _AddItemsState extends State<AddItems> {
                                   child: Column(
                                     children: List.generate(
                                       productControllers.categoryModels.length, (index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(bottom: 5),
-                                            child: ListTile(
-                                              tileColor: Colors.black12,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(7)
-                                              ),
-                                              dense: true,
-                                              title: Text(productControllers.categoryModels[index].nama ?? 'Unknown', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
-                                              onTap: () async {
-                                                setState(() {
-                                                  categoryItemController.text = productControllers.categoryModels[index].nama!;
-                                                  categorySelected = productControllers.categoryModels[index].id;
-                                                });
-                                                Navigator.pop(context);
-                                              },
+                                        return Padding(
+                                          padding: const EdgeInsets.only(bottom: 5),
+                                          child: ListTile(
+                                            tileColor: Colors.black12,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(7)
                                             ),
-                                          );
-                                        }
+                                            dense: true,
+                                            title: Text(productControllers.categoryModels[index].nama ?? 'Unknown', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
+                                            onTap: () async {
+                                              setState(() {
+                                                categoryItemController.text = productControllers.categoryModels[index].nama!;
+                                                categorySelected = productControllers.categoryModels[index].id;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        );
+                                      }
                                     )
                                   ),
                                 ),
@@ -223,7 +210,9 @@ class _AddItemsState extends State<AddItems> {
                           decoration: InputDecoration(
                             label: const Text("Category"),
                             suffixIcon: IconButton(
-                              onPressed: (){}, 
+                              onPressed: (){
+                                Get.to(() => const AddCategooryPage());
+                              }, 
                               icon: const Icon(Icons.add)
                             )
                           ),
@@ -240,51 +229,19 @@ class _AddItemsState extends State<AddItems> {
                     ),
                     child: Column(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                keyboardType: TextInputType.number,
-                                controller: hargaPenjualanItemController,
-                                decoration: const InputDecoration(
-                                  label: Text("Harga Penjualan"),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Expanded(child: 
-                              TextField(
-                                controller: biayaItemController,
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  label: Text("Biaya"),
-                                ),
-                              ),
-                            ),
-                          ],
+                        TextField(
+                            keyboardType: TextInputType.number,
+                            controller: hargaPenjualanItemController,
+                            decoration: const InputDecoration(
+                              label: Text("Harga Jual"),
+                          )
                         ),
-                        Row(
-                          children: [
-                            Expanded(child: 
-                              TextField(
-                                keyboardType: TextInputType.number,
-                                controller: hargaBeliItemController,
-                                decoration: const InputDecoration(
-                                  label: Text("Harga Beli"),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Expanded(child: 
-                              TextField(
-                                controller: stockMinimal,
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  label: Text("Stock Minimal"),
-                                ),
-                              ),
-                            ),
-                          ],
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          controller: hargaBeliItemController,
+                          decoration: const InputDecoration(
+                            label: Text("Harga Beli"),
+                          ),
                         ),
                       ],
                     ),

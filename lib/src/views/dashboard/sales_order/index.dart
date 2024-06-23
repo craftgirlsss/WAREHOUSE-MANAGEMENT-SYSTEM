@@ -310,9 +310,9 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                                   onPressed: () async {
                                     DateTime? pickedDate = await showDatePicker(
                                       context: context,
-                                      initialDate: DateTime(2024), //get today's date
-                                      firstDate:DateTime(2023), //DateTime.now() - not to allow to choose before today.
-                                      lastDate: DateTime.now()
+                                      initialDate: DateTime.now(), //get today's date
+                                      firstDate:DateTime(2024), //DateTime.now() - not to allow to choose before today.
+                                      lastDate: DateTime(2030)
                                     );
                                     if(pickedDate != null ){                      
                                       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
@@ -386,9 +386,6 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                         totalPembayaran: formatCurrencyId.format((hargaBuku * int.parse(jumlahBuku.text)) + int.parse(realCurrency!)),
                         totalSemua: formatCurrencyId.format((hargaBuku * int.parse(jumlahBuku.text)) + int.parse(realCurrency!) + 6500),
                       ));
-                      setState(() {
-                        showPreview = true;
-                      });
                     }
                   },
                   title: "Print",

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:warehouseapp/src/models/category_models.dart';
@@ -15,10 +14,95 @@ class ProductControllers extends GetxController {
   var dateItemSelected = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   var idItemSelected = 0.obs;
   var productModels = <ProductModels>[].obs;
+  var soldModels = <SoldModels>[].obs;
+  var purcashedHistoryModels = <PurcashedHistoryModels>[].obs;
   var categoryModels = <CategoryModels>[].obs;
+  var resultInvoice = [].obs;
+  var resultUpdateStockHistory = [].obs;
   var id = vars.client.auth.currentUser?.id;
   var totalSoldQuantities = 0.obs;
   var totalPurcashedQuantities = 0.obs;
+
+  Future<bool> deleteItems(int id)async{
+    try {
+      isLoading(true);
+      List? resultDeleteItem = await vars.client.from('item').update({'deleted' : true}).eq('id', id).select();
+      print(resultDeleteItem);
+      if(resultDeleteItem.isEmpty){
+        isLoading(false);
+        return false;
+      }else if(resultDeleteItem.isNotEmpty){
+        isLoading(false);
+        return true;
+      }else{
+        isLoading(false);
+        return false;
+      }
+    } catch (e) {
+      isLoading(false);
+      return false;
+    }
+  }
+
+  Future<bool> getUpdateStockHistory() async {
+    isLoading.value = true;
+    try {
+      List? result = await vars.client
+          .from('history_update_stock')
+          .select('*, item(*), vendor(*)');
+      print(result);
+      if(result.isNotEmpty){
+        resultUpdateStockHistory.value = result;
+        isLoading.value = false;
+        return true;
+      }
+      isLoading.value = false;
+      return false;
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+    }
+    isLoading.value = false;
+    return false;
+  }
+
+  Future<bool> postHistoryUpdateStock({int? itemID, int? vendorID, String? notes, int? jumlahItem, int? totalHarga, String? transactionDate}) async {
+    isLoading.value = true;
+    try {
+      List? resultUpdateStock = await vars.client
+          .from('history_update_stock')
+          .insert([
+            {
+              'vendor_id' : vendorID,
+              'item_id' : itemID,
+              'notes' : notes,
+              'jumlah_item_update' : jumlahItem,
+              'total_harga' : totalHarga,
+              'transaction_date' : transactionDate
+            }
+          ])
+          .select();
+      // print(resultUpdateStock);
+      
+      List? resultUpdateStockItem = await vars.client
+          .from('item')
+          .insert([
+            {
+              'item_id' : itemID,
+              'jumlah_stock_saat_ini' : jumlahItem
+            }
+          ])
+          .select();
+      // print(resultUpdateStockItem);
+      isLoading.value = false;
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+    }
+    isLoading.value = false;
+    return false;
+  }
 
   Future<bool> getCategoryItem() async {
     isLoading.value = true;
@@ -26,7 +110,7 @@ class ProductControllers extends GetxController {
       List result = await vars.client
           .from('kategori')
           .select('*');
-      print(result);
+      // print(result);
       categoryModels.value = result.map((e) => CategoryModels.fromJson(e)).toList();
       isLoading.value = false;
       return true;
@@ -38,24 +122,28 @@ class ProductControllers extends GetxController {
     return false;
   }
 
-  fetchProductItems() async {
+  Future<bool> fetchProductItems() async {
     isLoading.value = true;
     try {
-      List result = await vars.client
+      List? result = await vars.client
           .from('item')
           .select('*, kategori(*)');
-      productModels.value = result.map((e) => ProductModels.fromJson(e)).toList();
+      if(result.isNotEmpty){
+        productModels.value = result.map((e) => ProductModels.fromJson(e)).toList();
+        isLoading.value = false;
+        return true;
+      }
       isLoading.value = false;
+      return false;
     } catch (e) {
       print(e);
       isLoading.value = false;
+      return false;
     }
-    isLoading.value = false;
   }
 
   Future<bool> addProductItems({
     String? namaItem,
-    String? sku,
     int? hargaPenjaualan,
     String? penerbit,
     int? openingStock,
@@ -64,20 +152,26 @@ class ProductControllers extends GetxController {
   }) async {
     isLoading.value = true;
     try {
-      List result = await vars.client
+      List? result = await vars.client
           .from('item')
           .insert({
             'nama' : namaItem,
-            'stock_awal' : openingStock,
+            'jumlah_stock_saat_ini' : openingStock,
             'penerbit' : penerbit,
             'harga_jual' : hargaPenjaualan,
-            'sku' : sku,
             'kategori_id' : category
           })
           .select();
-      print(result);
-      isLoading.value = false;
-      return true;
+      if(result.isEmpty){
+        isLoading.value = false;
+        return false;
+      }else if(result.isNotEmpty){
+        isLoading.value = false;
+        return true;
+      }else{
+        isLoading.value = false;
+        return false;
+      }
     } catch (e) {
       print(e);
       isLoading.value = false;
@@ -109,7 +203,7 @@ class ProductControllers extends GetxController {
           })
           .eq('id', id!)
           .select();
-      print(result);
+      // print(result);
       isLoading.value = false;
       return true;
     } catch (e) {
@@ -120,54 +214,78 @@ class ProductControllers extends GetxController {
     return false;
   }
 
-  purchasedQuantities() async {
+  Future<bool> purchasedQuantities() async {
     isLoading.value = true;
     try {
-      List resultPurchasedQuantities = await vars.client
-          .from('purchase_order_item')
-          .select('quantity');
-
-      for(int i = 0; i<resultPurchasedQuantities.length; i++){
-        totalPurcashedQuantities.value = resultPurchasedQuantities[i]['quantity'];
+      List? resultPurcashed = await vars.client
+        .from('history_update_stock')
+        .select('*');
+        // print(resultPurcashed);
+      if(resultPurcashed.isEmpty){
+        isLoading(false);
+        return false;
+      }else{
+        purcashedHistoryModels.value = resultPurcashed.map((value) => PurcashedHistoryModels.fromJson(value)).toList();
+        for(int i = 0; i < resultPurcashed.length; i++){
+          totalPurcashedQuantities.value = totalPurcashedQuantities.value + (purcashedHistoryModels[i].totalHarga ?? 0);
+        }
+        isLoading(false);
+        return true;
       }
-      
-      isLoading.value = false;
     } catch (e) {
       print(e);
       isLoading.value = false;
+      return false;
     }
-    isLoading.value = false;
   }
 
-  soldQuantities() async {
-    isLoading.value = true;
-    int totalPurcashedOrderItem = 0;
-    int totalSaleOrder = 0;
+  Future<bool> soldQuantities() async {
+    isLoading(true);
     try {
-      List resultPurcashedOrderItem = await vars.client
-          .from('purchase_order_item')
-          .select('quantity');
-
-      List resultSaleOrder = await vars.client
-          .from('sale_order')
-          .select('total');
-      // productModels.value = result.map((e) => ProductModels.fromJson(e)).toList();
-      for(int i = 0; i<resultPurcashedOrderItem.length; i++){
-        totalPurcashedOrderItem = resultPurcashedOrderItem[i]['quantity'];
+      List? resultSoldQuantities = await vars.client.from('invoice_order').select('*');
+      print(resultSoldQuantities);
+      if(resultSoldQuantities.isEmpty){
+        isLoading(false);
+        return false;
+      }else{
+        soldModels.value = resultSoldQuantities.map((value) => SoldModels.fromJson(value)).toList();
+        for(int i = 0; i < resultSoldQuantities.length; i++){
+          totalSoldQuantities.value = totalSoldQuantities.value + (soldModels[i].totalTagihan ?? 0);
+        }
+        print(totalSoldQuantities.value);
+        isLoading(false);
+        return true;
       }
-
-      for(int i = 0; i<resultSaleOrder.length; i++){
-        totalSaleOrder = resultSaleOrder[i]['total'];
-      }
-      
-      totalSoldQuantities.value = totalPurcashedOrderItem - totalSaleOrder;
-
-      isLoading.value = false;
     } catch (e) {
-      print(e);
-      isLoading.value = false;
+      isLoading(false);
+      return false;
     }
-    isLoading.value = false;
+    // int totalPurcashedOrderItem = 0;
+    // int totalSaleOrder = 0;
+    // try {
+    //   List resultPurcashedOrderItem = await vars.client
+    //       .from('purchase_order_item')
+    //       .select('quantity');
+
+    //   List resultSaleOrder = await vars.client
+    //       .from('sale_order')
+    //       .select('total');
+    //   // productModels.value = result.map((e) => ProductModels.fromJson(e)).toList();
+    //   for(int i = 0; i<resultPurcashedOrderItem.length; i++){
+    //     totalPurcashedOrderItem = resultPurcashedOrderItem[i]['quantity'];
+    //   }
+
+    //   for(int i = 0; i<resultSaleOrder.length; i++){
+    //     totalSaleOrder = resultSaleOrder[i]['total'];
+    //   }
+      
+    //   totalSoldQuantities.value = totalPurcashedOrderItem - totalSaleOrder;
+
+    //   isLoading.value = false;
+    // } catch (e) {
+    //   print(e);
+    //   isLoading.value = false;
+    // }
   }
 
 
@@ -179,7 +297,7 @@ class ProductControllers extends GetxController {
       List resultTotalEarnings = await vars.client
           .from('sale_order_item')
           .select('harga_total');
-      print("ini resultTotalEarnings $resultTotalEarnings");
+      // print("ini resultTotalEarnings $resultTotalEarnings");
       for(int i = 0; i < resultTotalEarnings.length; i++){
         earning = resultTotalEarnings[i]['harga_total'];
         totalEarning = totalEarning + earning;
@@ -201,7 +319,7 @@ class ProductControllers extends GetxController {
       List resultTotalSpendings = await vars.client
           .from('purchase_order_item')
           .select('harga_total');
-      print("ini resulttotalSpendings $resultTotalSpendings");
+      // print("ini resulttotalSpendings $resultTotalSpendings");
       for(int i = 0; i < resultTotalSpendings.length; i++){
         spending = resultTotalSpendings[i]['harga_total'];
         totalSpending = totalSpending + spending;
@@ -215,27 +333,34 @@ class ProductControllers extends GetxController {
     }
   }
 
-  updateStock({int? itemID, int? quantity, int? harga_per_item, int? harga_total}) async {
+  updateStock() async {
     isLoading.value = true;
-    int total = priceBook.value * itemCountSelected.value;
-    print("ini total harga $total");
-    print("ini item id ${idItemSelected.value}");
+    // int total = priceBook.value * itemCountSelected.value;
     try {
-      List resultTotalUpdateStock = await vars.client
-          .from('purchase_order_item')
-          .update({'quantity': itemCountSelected.value,
-            'harga_per_item' : priceBook.value,
-            'harga_total' : total
+      List resultUpdateStock = await vars.client
+          .from('item')
+          .update({
+            'jumlah_stock_saat_ini' : itemCountSelected.value
           })
-          .eq('item_id', idItemSelected.value)
+          .eq('id', idItemSelected.value)
           .select();
-      print("ini resulttotalUpdateStock $resultTotalUpdateStock");
-      isLoading.value = false;
-      if(resultTotalUpdateStock.length == 0){
-        Get.snackbar("Gagal", "Tidak ada buku yang dimaksud didalam tabel purchase order item");
-      }else{
-        Get.snackbar("Gagal", "Berhasil mengupdate stock buku", backgroundColor: Colors.white);
-      }
+      // print("ini result update stock $resultUpdateStock");
+
+      // List resultTotalUpdateStock = await vars.client
+      //     .from('purchase_order_item')
+      //     .update({'quantity': itemCountSelected.value,
+      //       'harga_per_item' : priceBook.value,
+      //       'harga_total' : total
+      //     })
+      //     .eq('item_id', idItemSelected.value)
+      //     .select();
+      // print("ini resulttotalUpdateStock $resultTotalUpdateStock");
+      // isLoading.value = false;
+      // if(resultTotalUpdateStock.length == 0){
+      //   Get.snackbar("Gagal", "Tidak ada buku yang dimaksud didalam tabel purchase order item", backgroundColor: Colors.white);
+      // }else{
+      //   Get.snackbar("Gagal", "Berhasil mengupdate stock buku", backgroundColor: Colors.white);
+      // }
     } catch (e) {
       print(e);
       isLoading.value = false;
@@ -245,19 +370,19 @@ class ProductControllers extends GetxController {
   Future<bool> addCategory({String? kodeBuku, String? judul}) async {
     isLoading.value = true;
     try {
-      List resultAddingCategory = await vars.client
+      List? resultAddingCategory = await vars.client
         .from('kategori')
         .insert({
           'nama' : judul,
           'kode'  : kodeBuku
         })
         .select();
-        print("ini resulttotalUpdateStock $resultAddingCategory");
+        // print("ini resulttotalUpdateStock $resultAddingCategory");
         isLoading.value = false;
-      if(resultAddingCategory.length == 0){
+      if(resultAddingCategory.isEmpty){
         Get.snackbar("Gagal", "Gagal menyimpan data ke tabel kategori",);
         return false;
-      }else if(resultAddingCategory.length > 0){
+      }else if(resultAddingCategory.isNotEmpty){
         return true;
       }else{
         return false;
@@ -334,5 +459,124 @@ class ProductControllers extends GetxController {
       isLoading.value = false;
       return false;
     }
+  }
+
+
+  Future<bool> stockHistory() async {
+    isLoading.value = true;
+    try {
+      List resultData = await vars.client
+          .from('invoice_order')
+          .select('*, item(*, kategori(*)), customer(*)');
+      // print(resultData);
+      print("ini length invoice models = ${resultData.length}");
+      resultInvoice.value = resultData;
+      if(resultData.isEmpty){
+        print("masuk ke isempty");
+        isLoading.value = false;
+        return false;
+      }else{
+        isLoading.value = false;
+        return true;
+      }
+    } catch (e) {
+      isLoading.value = false;
+      return false;
+    }
+  }
+
+  Future<bool> updateStatusHistoryItem({
+    int? status,
+    int? id
+  }) async {
+    isLoading.value = true;
+    try {
+      await vars.client
+          .from('invoice_order')
+          .update({
+            'status' : status
+          })
+          .eq('id', id!)
+          .select();
+      isLoading.value = false;
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+    }
+    isLoading.value = false;
+    return false;
+  }
+}
+
+class SoldModels {
+  int? id, itemID, customerID, tarif, jumlahBuku, totalTagihan, status;
+  String? invoiceKode, createdAt, nomorResi, tanggalOrder, tanggalTagihan, metodePembayaran, imageURL, nomorPO;
+
+  SoldModels({
+      this.id,
+      this.itemID,
+      this.customerID,
+      this.tarif,
+      this.jumlahBuku,
+      this.totalTagihan,
+      this.status,
+      this.invoiceKode,
+      this.createdAt,
+      this.nomorResi,
+      this.tanggalOrder,
+      this.imageURL,
+      this.metodePembayaran,
+      this.nomorPO,
+      this.tanggalTagihan
+    });
+
+    factory SoldModels.fromJson(Map<String, dynamic> json){
+      return SoldModels(
+        id: json['id'],
+        itemID: json['item_id'],
+        customerID: json['customer_id'],
+        tarif: json['tarif'],
+        jumlahBuku: json['jumlah_buku'],
+        totalTagihan: json['total_tagihan'],
+        metodePembayaran: json['metode_pembayaran'],
+        createdAt: json['created_at'],
+        imageURL: json['image_url'],
+        invoiceKode: json['invoice_kode'],
+        nomorPO: json['nomor_po'],
+        nomorResi: json['nomor_resi'],
+        status: json['status'],
+        tanggalOrder: json['tanggal_order'],
+        tanggalTagihan: json['tanggal_tagihan']
+      );
+    }
+}
+
+class PurcashedHistoryModels {
+  int? id, vendorID, itemID, jumlahItemUpdate, totalHarga;
+  String? createdAt, notes, transactionDate;
+
+  PurcashedHistoryModels({
+      this.id,
+      this.itemID,
+      this.vendorID,
+      this.jumlahItemUpdate,
+      this.totalHarga,
+      this.createdAt,
+      this.notes,
+      this.transactionDate
+    });
+
+  factory PurcashedHistoryModels.fromJson(Map<String, dynamic> json){
+    return PurcashedHistoryModels(
+      id: json['id'],
+      itemID: json['item_id'],
+      vendorID: json['vendor_id'],
+      notes: json['notes'],
+      createdAt: json['creted_at'],
+      jumlahItemUpdate: json['jumlah_item_update'],
+      totalHarga: json['total_harga'],
+      transactionDate: json['transaction_date'],
+    );
   }
 }
