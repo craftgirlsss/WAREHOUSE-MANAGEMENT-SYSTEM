@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 
 Future showMyDialog({context, String? title, String? content, Function()? onPressed}) async {
     return showDialog<void>(
@@ -6,7 +7,7 @@ Future showMyDialog({context, String? title, String? content, Function()? onPres
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title ?? 'Unknown'),
+          title: Text(title ?? 'Unknown', style: kDefaultTextStyle(fontSize: 15)),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[

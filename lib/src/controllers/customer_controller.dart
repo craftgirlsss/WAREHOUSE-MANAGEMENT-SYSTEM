@@ -127,6 +127,90 @@ class CustomerController extends GetxController {
     }
   }
 
+  // Delete Vendor
+  Future<bool> deleteVendor({int? id}) async {
+    isLoading(true);
+    try {
+      List? result = await vars.client.from('vendor').update({
+        'deleted' : true
+      }).eq('id', id!)
+      .select();
+      print(result);
+      isLoading(false);
+      if(result.isEmpty){
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading(false);
+      return false;
+    }
+  }
+
+  // Delete Vendor
+  Future<bool> deleteCustomer({int? id}) async {
+    isLoading(true);
+    try {
+      List? result = await vars.client.from('customer').update({
+        'deleted' : true
+      }).eq('id', id!)
+      .select();
+      print(result);
+      isLoading(false);
+      if(result.isEmpty){
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading(false);
+      return false;
+    }
+  }
+
+  Future<bool> updateCustomer({int? id, String? name, String? phone}) async {
+    isLoading(true);
+    try {
+      List? result = await vars.client.from('customer').update({
+        'nama' : name,
+        'no_telp' : phone
+      }).eq('id', id!)
+      .select();
+      print(result);
+      isLoading(false);
+      if(result.isEmpty){
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading(false);
+      return false;
+    }
+  }
+
+  Future<bool> updateVendor({int? id, String? name, String? phone}) async {
+    isLoading(true);
+    try {
+      List? result = await vars.client.from('customer').update({
+        'nama' : name,
+        'no_telp' : phone
+      }).eq('id', id!)
+      .select();
+      print(result);
+      isLoading(false);
+      if(result.isEmpty){
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading(false);
+      return false;
+    }
+  }
+
   // uploadImageProfile(context, {ImageSource? media}) async {
   //   isLoading.value = true;
   //   XFile? image;

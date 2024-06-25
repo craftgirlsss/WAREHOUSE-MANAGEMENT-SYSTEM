@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
@@ -6,8 +5,7 @@ import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
-
-import '../update_stock/adding_contact_page.dart';
+import 'package:warehouseapp/src/views/dashboard/item/add_item.dart';
 import 'tile_items_add_feature.dart';
 
 class SelectItems extends StatefulWidget {
@@ -70,39 +68,39 @@ class _SelectItemsState extends State<SelectItems> {
                           actions: [
                             TextButton(
                               onPressed: (){
-                              Get.to(() => const AddingContactPage());
-                            }, child: Text("Add Contact", style: kDefaultTextStyle(color: Colors.white),))
+                              Get.to(() => const AddItems());
+                            }, child: Text("Add Item", style: kDefaultTextStyle(color: Colors.white),))
                         ],
-                        bottom: PreferredSize(
-                          preferredSize: const Size.fromHeight(60), 
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: SizedBox(
-                                    height: 50,
-                                    child: TextField(
-                                      style: kDefaultTextStyle(),
-                                      textAlign: TextAlign.start,
-                                      decoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.symmetric(vertical: 3),
-                                        hintText: "Search Item Name",
-                                        prefixIcon: const Icon(CupertinoIcons.search),
-                                        hintStyle: kDefaultTextStyle(),                                
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(25)
-                                        )
-                                      ),
-                                    ),
-                                  )
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // bottom: PreferredSize(
+                        //   preferredSize: const Size.fromHeight(60), 
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(8.0),
+                        //     child: Row(
+                        //       children: [
+                        //         Expanded(
+                        //           child: SizedBox(
+                        //             height: 50,
+                        //             child: TextField(
+                        //               style: kDefaultTextStyle(),
+                        //               textAlign: TextAlign.start,
+                        //               decoration: InputDecoration(
+                        //                 contentPadding: const EdgeInsets.symmetric(vertical: 3),
+                        //                 hintText: "Search Item Name",
+                        //                 prefixIcon: const Icon(CupertinoIcons.search),
+                        //                 hintStyle: kDefaultTextStyle(),                                
+                        //                 filled: true,
+                        //                 fillColor: Colors.white,
+                        //                 border: OutlineInputBorder(
+                        //                   borderRadius: BorderRadius.circular(25)
+                        //                 )
+                        //               ),
+                        //             ),
+                        //           )
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                       ),
                       SliverList.builder(
                         itemCount: productControllers.productModels.length,

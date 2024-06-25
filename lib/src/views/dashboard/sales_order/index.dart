@@ -13,6 +13,7 @@ import 'package:warehouseapp/src/helpers/currencies/format_currency.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 import 'package:warehouseapp/src/helpers/random_string.dart';
 import 'package:warehouseapp/src/views/dashboard/sales_order/pdf_preview.dart';
+import 'package:warehouseapp/src/views/dashboard/update_stock/adding_contact_page.dart';
 
 class SalesOrderPage extends StatefulWidget {
   const SalesOrderPage({super.key});
@@ -112,13 +113,22 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     const Icon(CupertinoIcons.person_2_square_stack, color: Colors.black,),
-                                    Text("Tidak ada customer", style: kDefaultTextStyle(color: Colors.black),)
+                                    Text("Tidak ada customer", style: kDefaultTextStyle(color: Colors.black),),
+                                    TextButton(onPressed: (){
+                                      Get.to(() => const AddingContactPage());
+                                    }, child: const Text("Tambah Customer"))
                                   ],
                                 ),
                               ) : SingleChildScrollView(
                                   child: Column(
                                     children: List.generate(
-                                      customerController.listCustomer.length, (index) {
+                                      customerController.listCustomer.length + 1, (index) {
+                                        if(index == customerController.listCustomer.length){
+                                          return TextButton(onPressed: (){
+                                            Navigator.pop(context);
+                                            Get.to(() => const AddingContactPage());
+                                          }, child: const Text("Tambah Customer"));
+                                        }
                                           return Padding(
                                             padding: const EdgeInsets.only(bottom: 5),
                                             child: ListTile(
@@ -284,9 +294,9 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                                   onPressed: () async {
                                     DateTime? pickedDate = await showDatePicker(
                                       context: context,
-                                      initialDate: DateTime(2024), //get today's date
+                                      initialDate: DateTime.now(), //get today's date
                                       firstDate:DateTime(2023), //DateTime.now() - not to allow to choose before today.
-                                      lastDate: DateTime.now()
+                                      lastDate: DateTime(2030)
                                     );
                                     if(pickedDate != null ){                      
                                       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
@@ -321,7 +331,7 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                                       });
                                     }
                                   }, 
-                                  icon: const Icon(CupertinoIcons.calendar, color: Colors.black, size: 20,), label: Text(DateFormat('dd/MM/yyyy').format(datePickedOrder != null ? DateTime.parse(datePickedOrder!) : DateTime.now()), style: kDefaultTextStyle(fontSize: 13),))
+                                  icon: const Icon(CupertinoIcons.calendar, color: Colors.black, size: 20,), label: Text(DateFormat('dd/MM/yyyy').format(datePickedSampai != null ? DateTime.parse(datePickedSampai!) : DateTime.now()), style: kDefaultTextStyle(fontSize: 13),))
                               ],
                             ),
                           ),

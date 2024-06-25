@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/appbars/default_appbar.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 import 'package:warehouseapp/src/views/dashboard/settings/add_category.dart';
 
@@ -13,6 +15,7 @@ class CategoryDetails extends StatefulWidget {
 }
 
 class _CategoryDetailsState extends State<CategoryDetails> {
+  ProductControllers productControllers = Get.find();
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -24,7 +27,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
             backgroundColor: Colors.transparent,
             appBar: kDefaultAppBar(
               context, 
-              title: "Update Stock Detail",
+              title: "Edit Category",
             ),
             body: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 10),

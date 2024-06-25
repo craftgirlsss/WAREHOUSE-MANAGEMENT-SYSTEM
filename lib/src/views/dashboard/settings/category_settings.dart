@@ -40,12 +40,14 @@ class _CategorySettingsState extends State<CategorySettings> {
               body: CustomScrollView(
                 slivers: [
                   SliverAppBar(
+                    pinned: true,
                     backgroundColor: Colors.indigo.shade800,
                     title: Text("Category",
-                        style: kDefaultTextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold)),
+                      style: kDefaultTextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)
+                        ),
                     leading: IconButton(
                       icon: const Icon(
                         Icons.arrow_back_rounded,
@@ -57,28 +59,6 @@ class _CategorySettingsState extends State<CategorySettings> {
                       },
                       tooltip:
                           MaterialLocalizations.of(context).openAppDrawerTooltip,
-                    ),
-                    bottom: PreferredSize(
-                      preferredSize: const Size.fromHeight(60),
-                      child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: 50,
-                            child: TextField(
-                              style: kDefaultTextStyle(),
-                              textAlign: TextAlign.start,
-                              decoration: InputDecoration(
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(vertical: 3),
-                                  hintText: "Search Category",
-                                  prefixIcon: const Icon(CupertinoIcons.search),
-                                  hintStyle: kDefaultTextStyle(),
-                                  filled: true,
-                                  fillColor: Colors.white70,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25))),
-                            ),
-                          )),
                     ),
                   ),
                   Obx(() => productControllers.isLoading.value ? SliverList(delegate: SliverChildListDelegate([
@@ -98,21 +78,22 @@ class _CategorySettingsState extends State<CategorySettings> {
                                 titleStyle: kDefaultTextStyle(),
                                 titlePadding: const EdgeInsets.only(top: 10),
                                 contentPadding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
-                                content: Text("Apakah anda yakin menghapus kategori ini?", textAlign: TextAlign.center,),
+                                content: const Text("Apakah anda yakin menghapus kategori ini?", textAlign: TextAlign.center,),
                                 barrierDismissible: false,
                                 actions: [
                                   Obx(() => TextButton(
                                     onPressed: productControllers.isLoading.value ? (){} : () async {
-                                      await productControllers.deleteCategory(
-                                        kodeBuku : productControllers.categoryModels[index].kode);
+                                      await productControllers.deleteCategory(kodeBuku : productControllers.categoryModels[index].kode).then((value){
                                         Navigator.pop(context);
                                         Get.snackbar("Berhasil", "Berhasil menghapus kategori", backgroundColor: Colors.white);
                                         productControllers.getCategoryItem();
-                                    }, child: Text("Ya", style: TextStyle(color: Colors.red),)),
+                                      });
+                                    }, 
+                                    child: const Text("Ya", style: TextStyle(color: Colors.red),)),
                                   ),
                                   TextButton(onPressed: (){
                                     Navigator.pop(context);
-                                  }, child: Text("Tidak")),
+                                  }, child: const Text("Tidak")),
                                 ]
                               );
                             },
@@ -125,11 +106,6 @@ class _CategorySettingsState extends State<CategorySettings> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             tileColor: Colors.white60,
-                            trailing: const Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [Text("1")],
-                            ),
                             title: Text(
                               "${productControllers.categoryModels[index].kode} - ${productControllers.categoryModels[index].nama}",
                               style: kDefaultTextStyle(

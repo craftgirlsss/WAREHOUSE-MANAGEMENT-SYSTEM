@@ -68,10 +68,17 @@ class _ItemsPageState extends State<ItemsPage> {
                 ) : CustomScrollView(
                   slivers: [
                     SliverList.builder(
-                      itemCount: productControllers.productModels.length,
+                      itemCount: productControllers.itemCountLength.value,
                       itemBuilder: (context, index){
-                        if(productControllers.productModels[index].deleted == true){
-                          return Container();
+                        if(productControllers.itemCountLength.value == 0){
+                          return Center(
+                            child: Container(
+                              color: Colors.transparent,
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: const Text("Tidak ada data buku", style: TextStyle(color: Colors.white),),
+                            ),
+                          );
                         }
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -103,7 +110,7 @@ class _ItemsPageState extends State<ItemsPage> {
                                     idCategory: productControllers.productModels[index].toko?.id,
                                     penerbit: productControllers.productModels[index].penerbit,
                                     sellingPrice: productControllers.productModels[index].hargaJual,
-                                    costPrice: productControllers.productModels[index].hargaJual != null && productControllers.productModels[index].hargaBeli != null ? ((productControllers.productModels[index].hargaJual! - productControllers.productModels[index].hargaBeli!) * 0.15) : 0,
+                                    hargaBeli: productControllers.productModels[index].hargaBeli,
                                     sku: productControllers.productModels[index].sku,
                                     stockLength: productControllers.productModels[index].jumlahStockSaatIni,
                                     title: productControllers.productModels[index].nama,

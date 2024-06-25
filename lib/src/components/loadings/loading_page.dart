@@ -16,7 +16,7 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), (){
-      Get.to(() => const MainPage());
+      Get.off(() => const MainPage());
     });
     super.initState();
   }

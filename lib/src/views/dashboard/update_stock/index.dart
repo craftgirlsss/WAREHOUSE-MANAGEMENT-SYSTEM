@@ -11,6 +11,7 @@ import 'package:warehouseapp/src/controllers/customer_controller.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 import 'package:warehouseapp/src/views/dashboard/home/select_items.dart';
+import 'package:warehouseapp/src/views/dashboard/update_stock/adding_contact_page.dart';
 
 class UpdateStockPage extends StatefulWidget {
   const UpdateStockPage({super.key});
@@ -75,34 +76,43 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     const Icon(CupertinoIcons.person_2_square_stack, color: Colors.black,),
-                                    Text("Tidak ada vendor", style: kDefaultTextStyle(color: Colors.black),)
+                                    Text("Tidak ada vendor", style: kDefaultTextStyle(color: Colors.black),),
+                                    TextButton(onPressed: (){
+                                      Get.to(() => const AddingContactPage());
+                                    }, child: const Text("Tambah Customer"))
                                   ],
                                 ),
                               ) : SingleChildScrollView(
                                   child: Column(
                                     children: List.generate(
-                                      customerController.listVendor.length, (index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(bottom: 5),
-                                            child: ListTile(
-                                              tileColor: Colors.black12,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(7)
-                                              ),
-                                              dense: true,
-                                              title: Text(customerController.listVendor[index]['nama'] ?? 'Tidak ada nama', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
-                                              onTap: () async {
-                                                setState(() {
-                                                  namaVendorController.text = customerController.listVendor[index]['nama'];
-                                                  productControllers.vendorNameItemSelected.value = customerController.listVendor[index]['nama'];
-                                                  vendorID = customerController.listVendor[index]['id'];
-                                                });
-                                                print("ini vendor ID : $vendorID");
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          );
+                                      customerController.listVendor.length + 1, (index) {
+                                        if(index == customerController.listVendor.length){
+                                          return TextButton(onPressed: (){
+                                            Get.to(() => const AddingContactPage());
+                                          }, 
+                                          child: const Text("Tambah Customer"));
                                         }
+                                        return Padding(
+                                          padding: const EdgeInsets.only(bottom: 5),
+                                          child: ListTile(
+                                            tileColor: Colors.black12,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(7)
+                                            ),
+                                            dense: true,
+                                            title: Text(customerController.listVendor[index]['nama'] ?? 'Tidak ada nama', style: kDefaultTextStyle(color: Colors.black, fontSize: 14),),
+                                            onTap: () async {
+                                              setState(() {
+                                                namaVendorController.text = customerController.listVendor[index]['nama'];
+                                                productControllers.vendorNameItemSelected.value = customerController.listVendor[index]['nama'];
+                                                vendorID = customerController.listVendor[index]['id'];
+                                              });
+                                              print("ini vendor ID : $vendorID");
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        );
+                                      }
                                     )
                                   ),
                                 ),

@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   late TooltipBehavior tooltip;
   int? totalEarnings = 0;
   int? totalSpendings = 0;
+  int? lengthContact = 0;
 
   String dropDownValueToday = 'Today';
   // List of items in our dropdown Today menu 
@@ -63,7 +64,11 @@ class _HomePageState extends State<HomePage> {
     //   totalSpendings = value;
     // }));
     super.initState();
-    accountController.getPersonContact();
+    accountController.getPersonContact().then((value){
+      setState(() {
+        lengthContact = value;
+      });
+    });
     productControllers.fetchProductItems();
     productControllers.soldQuantities();
     productControllers.purchasedQuantities();
@@ -73,25 +78,23 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final List<ChartData> chartData = [
-            ChartData(1, 5, 5),
-            ChartData(2, 10, 7),
-            ChartData(3, 7, 3),
-            ChartData(4, 5, 5),
-            ChartData(5, 21, 5),
-            ChartData(5, 17, 16),
-        ];
+      ChartData(1, 5, 5),
+      ChartData(2, 10, 7),
+      ChartData(3, 7, 3),
+      ChartData(4, 5, 5),
+      ChartData(5, 21, 5),
+      ChartData(5, 17, 16),
+    ];
     return RefreshIndicator(
       onRefresh: () async {
-        // await productControllers.fetchProductItems();
-        // await accountController.getPersonContact();
-        // await productControllers.soldQuantities();
-        // await productControllers.purchasedQuantities();
-        // await productControllers.totalEarnings().then((value) => setState(() {
-        //   totalEarnings = value;
-        // }));
-        // await productControllers.totalSpendings().then((value) => setState(() {
-        //   totalSpendings = value;
-        // }));
+        await accountController.getPersonContact().then((value){
+          setState(() {
+            lengthContact = value;
+          });
+        });
+        await productControllers.fetchProductItems();
+        await productControllers.soldQuantities();
+        await productControllers.purchasedQuantities();
         setState(() {});
       },
       child: Scaffold(
@@ -232,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                                   Obx(() => 
                                     productControllers.isLoading.value ? const CupertinoActivityIndicator() :
                                     productControllers.productModels.length == 0 ? const Text("0") : 
-                                    Text(productControllers.productModels.length.toString()))
+                                    Text(productControllers.itemCountLength.toString()))
                                 ],
                               ),
                               const Flexible(
@@ -273,7 +276,7 @@ class _HomePageState extends State<HomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text("All Contacts"),
-                                  Obx(() => accountController.isLoading.value ? const CupertinoActivityIndicator() : accountController.listContacts.length == 0 ? const Text("0") : Text(accountController.listContacts.length.toString()))
+                                  Obx(() => accountController.isLoading.value ? const CupertinoActivityIndicator() : Text(lengthContact.toString()))
                                 ],
                               ),
                               const Flexible(

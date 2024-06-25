@@ -1,29 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/appbars/default_appbar.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/global_variable.dart';
+import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
+import 'package:warehouseapp/src/controllers/customer_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 class EditContactPage extends StatefulWidget {
+  final int? id;
   final String? contactName;
   final String? contactNumber;
   final ContactType? contactType;
-  const EditContactPage({super.key, this.contactName, this.contactNumber, this.contactType});
+  const EditContactPage({super.key, this.contactName, this.contactNumber, this.contactType, this.id});
 
   @override
   State<EditContactPage> createState() => _EditContactPageState();
 }
 
 class _EditContactPageState extends State<EditContactPage> {
+  CustomerController customerController = Get.find();
   TextEditingController contactNameController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
-  String? datePicked;
+  String? contactType;
   ContactType? dataperson = ContactType.customer;
   PhoneContact? phoneContact;
   String? nameContact;
+
 
   @override
   void initState() {
@@ -31,6 +37,15 @@ class _EditContactPageState extends State<EditContactPage> {
     contactNameController.text = widget.contactName ?? 'Unknonwn Name';
     contactNumberController.text = widget.contactNumber ?? '0';
     dataperson = widget.contactType;
+    if(dataperson == ContactType.customer){
+      setState(() {
+        contactType = "Customer";
+      });
+    }else{
+      setState(() {
+        contactType = "Vendor";
+      });
+    }
   }
 
   @override
@@ -48,8 +63,32 @@ class _EditContactPageState extends State<EditContactPage> {
           onTap: () => focusManager(),
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: kDefaultAppBar(context, title: "Edit Contact", actions: [
-              TextButton(onPressed: (){}, child: Text("Save", style: kDefaultTextStyle(color: Colors.white, fontSize: 16),))
+            appBar: kDefaultAppBar(context, title: "Edit Contacts", actions: [
+              TextButton(onPressed: () async {
+                if(contactNameController.text == "" || contactNumberController.text == ""){
+                  Get.snackbar("Gagal", "Field tidak boleh kosong", backgroundColor: Colors.white);
+                }else{
+                  if(dataperson == ContactType.customer){
+                    await customerController.updateCustomer(id: widget.id, name: contactNameController.text, phone: contactNumberController.text).then((value) {
+                      if(value){
+                        Get.snackbar("Berhasil", "Berhasil update kontak", backgroundColor: Colors.white);
+                        Navigator.pop(context);
+                      }else{
+                        Get.snackbar("Gagal", "Gagal update kontak", backgroundColor: Colors.white);
+                      }
+                    });
+                  }else{
+                    await customerController.updateVendor(id: widget.id, name: contactNameController.text, phone: contactNumberController.text).then((value) {
+                      if(value){
+                        Get.snackbar("Berhasil", "Berhasil update kontak", backgroundColor: Colors.white);
+                        Navigator.pop(context);
+                      }else{
+                        Get.snackbar("Gagal", "Gagal update kontak", backgroundColor: Colors.white);
+                      }
+                    });
+                  }
+                }
+              }, child: Text("Save", style: kDefaultTextStyle(color: Colors.white, fontSize: 16),))
             ], withAction: true),
             body: ListView(
               padding: GlobalVariable.defaultPadding,
@@ -85,6 +124,7 @@ class _EditContactPageState extends State<EditContactPage> {
                       ),
                       const SizedBox(height: 15),
                       TextField(
+                        keyboardType: TextInputType.phone,
                         controller: contactNumberController,
                         decoration: InputDecoration(
                           label: Text("Phone Number", style: kDefaultTextStyle(fontSize: 16),),
@@ -95,38 +135,8 @@ class _EditContactPageState extends State<EditContactPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 18),
-                        child: Text("Contact Type", style: kDefaultTextStyle(fontSize: 16),),
+                        child: Text("Contact Type : $contactType", style: kDefaultTextStyle(fontSize: 16),),
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: RadioListTile<ContactType>(
-                              contentPadding: const EdgeInsets.all(0),
-                              title: Text('Customer', style: kDefaultTextStyle(fontSize: 14),),
-                              groupValue: dataperson,
-                              value: ContactType.customer,
-                              onChanged:(ContactType? value) { 
-                                setState(() {
-                                  dataperson = value;
-                                });
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: RadioListTile<ContactType>(
-                              contentPadding: const EdgeInsets.all(0),
-                              title: Text('Vendor', style: kDefaultTextStyle(fontSize: 14),),
-                              groupValue: dataperson,
-                              value: ContactType.vendor,
-                              onChanged:(ContactType? value) { 
-                                setState(() {
-                                  dataperson = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      )
                     ]
                   ),
                 ),
@@ -134,6 +144,7 @@ class _EditContactPageState extends State<EditContactPage> {
             ),
           ),
         ),
+        Obx(() => customerController.isLoading.value ? floatingLoading() : Container())
       ],
     );
   }

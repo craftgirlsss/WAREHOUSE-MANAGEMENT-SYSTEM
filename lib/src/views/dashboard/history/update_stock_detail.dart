@@ -8,7 +8,6 @@ import 'package:warehouseapp/src/components/custom_style/dashed_line.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
-import 'package:warehouseapp/src/views/dashboard/item/item_detail.dart';
 
 class UpdateStockDetail extends StatefulWidget {
   final int? idProduct;
@@ -59,12 +58,6 @@ class _UpdateStockDetailState extends State<UpdateStockDetail> {
               appBar: kDefaultAppBar(
                 context, 
                 title: "History Details",
-                actions: [
-                  IconButton(
-                    onPressed: (){}, 
-                    icon: const Icon(Icons.delete, color: Colors.white))
-                ], 
-                withAction: true
               ),
               backgroundColor: Colors.transparent,
               body:  SingleChildScrollView(
@@ -127,15 +120,15 @@ class _UpdateStockDetailState extends State<UpdateStockDetail> {
                     const SizedBox(height: 10),
                     ListTile(
                         onTap: (){
-                          Get.to(() => ItemDetail(
-                            penerbit: productControllers.resultInvoice[widget.indexItem!]['item']['penerbit'],
-                            costPrice: productControllers.resultInvoice[widget.indexItem!]['item']['harga_beli'].toDouble(),
-                            sellingPrice: productControllers.resultInvoice[widget.indexItem!]['item']['harga_jual'],
-                            sku: productControllers.resultInvoice[widget.indexItem!]['item']['sku'],
-                            stockLength: productControllers.resultInvoice[widget.indexItem!]['item']['jumlah_stock_saat_ini'],
-                            title: productControllers.resultInvoice[widget.indexItem!]['item']['nama'],
-                            category: productControllers.resultInvoice[widget.indexItem!]['item']['kategori']['nama'],
-                          ));
+                          // Get.to(() => ItemDetail(
+                          //   penerbit: productControllers.resultInvoice[widget.indexItem!]['item']['penerbit'],
+                          //   costPrice: productControllers.resultInvoice[widget.indexItem!]['item']['harga_beli'].toDouble(),
+                          //   sellingPrice: productControllers.resultInvoice[widget.indexItem!]['item']['harga_jual'],
+                          //   sku: productControllers.resultInvoice[widget.indexItem!]['item']['sku'],
+                          //   stockLength: productControllers.resultInvoice[widget.indexItem!]['item']['jumlah_stock_saat_ini'],
+                          //   title: productControllers.resultInvoice[widget.indexItem!]['item']['nama'],
+                          //   category: productControllers.resultInvoice[widget.indexItem!]['item']['kategori']['nama'],
+                          // ));
                         },
                         shape: RoundedRectangleBorder( //<-- SEE HERE
                           side: const BorderSide(width: 0.2),
@@ -148,13 +141,13 @@ class _UpdateStockDetailState extends State<UpdateStockDetail> {
                           height: 35,
                           child: const Icon(Icons.image_outlined, color: Colors.black87, size: 40,)
                         ),
-                        trailing: Text("Sisa Stok ${productControllers.resultInvoice[widget.indexItem!]['item']['jumlah_stock_saat_ini'].toString()}"),
-                        title: Text(productControllers.resultInvoice[widget.indexItem!]['item']['nama'], overflow: TextOverflow.ellipsis, style: kDefaultTextStyle(fontWeight: FontWeight.bold,fontSize: 13),),
+                        trailing: Text("Sisa Stok ${productControllers.resultInvoice[widget.indexItem!]['item']['jumlah_stock_saat_ini'] ?? 'Unknown'}"),
+                        title: Text(productControllers.resultInvoice[widget.indexItem!]['item']['nama'] ?? 'Unknown Name', overflow: TextOverflow.ellipsis, style: kDefaultTextStyle(fontWeight: FontWeight.bold,fontSize: 13),),
                         subtitle: Row(
                           children: [
                             const Icon(Icons.folder_open, size: 20),
                             const SizedBox(width: 3),
-                            Text(productControllers.resultInvoice[widget.indexItem!]['item']['kategori']['nama'], style: kDefaultTextStyle(fontSize: 11))
+                            Text(productControllers.resultInvoice[widget.indexItem!]['item']['kategori']['nama'] ?? 'Unknown name', style: kDefaultTextStyle(fontSize: 11))
                           ],
                         ),
                     ),

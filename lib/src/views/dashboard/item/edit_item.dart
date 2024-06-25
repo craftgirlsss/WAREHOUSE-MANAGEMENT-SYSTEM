@@ -16,8 +16,8 @@ class EditItem extends StatefulWidget {
   final String? namaPenerbitItem;
   final String? categoryItem;
   final int? hargaPenjualanItem;
-  final double? biayaItem;
-  const EditItem({super.key, this.namaItem, this.skuItem, this.openingStockItem, this.namaPenerbitItem, this.categoryItem, this.hargaPenjualanItem, this.biayaItem, this.idCategory, this.id});
+  final int? hargaJual;
+  const EditItem({super.key, this.namaItem, this.skuItem, this.openingStockItem, this.namaPenerbitItem, this.categoryItem, this.hargaPenjualanItem, this.hargaJual, this.idCategory, this.id});
 
   @override
   State<EditItem> createState() => _EditItemState();
@@ -31,7 +31,7 @@ class _EditItemState extends State<EditItem> {
   TextEditingController namaPenerbitItemController = TextEditingController();
   TextEditingController categoryItemController = TextEditingController();
   TextEditingController hargaPenjualanItemController = TextEditingController();
-  TextEditingController biayaItemController = TextEditingController();
+  TextEditingController hargaJualController = TextEditingController();
   int? categoryID;
 
   @override
@@ -44,7 +44,7 @@ class _EditItemState extends State<EditItem> {
     namaPenerbitItemController.text = widget.namaPenerbitItem ?? 'Unknown';
     categoryItemController.text = widget.categoryItem ?? 'Unknown';
     hargaPenjualanItemController.text = widget.hargaPenjualanItem.toString();
-    biayaItemController.text = widget.biayaItem!.toInt().toString();
+    hargaJualController.text = widget.hargaJual != null ? widget.hargaJual!.toInt().toString() : '';
   }
 
   @override
@@ -55,7 +55,7 @@ class _EditItemState extends State<EditItem> {
     namaPenerbitItemController.dispose();
     categoryItemController.dispose();
     hargaPenjualanItemController.dispose();
-    biayaItemController.dispose();
+    hargaJualController.dispose();
     super.dispose();
   }
   @override
@@ -133,7 +133,7 @@ class _EditItemState extends State<EditItem> {
                         TextField(
                           controller: openingStockItemController,
                           decoration: const InputDecoration(
-                            label: Text("Opening Stock"),
+                            label: Text("Stock"),
                           ),
                         ),
                         TextField(
@@ -221,16 +221,16 @@ class _EditItemState extends State<EditItem> {
                           TextField(
                             controller: hargaPenjualanItemController,
                             decoration: const InputDecoration(
-                              label: Text("Harga Penjualan"),
+                              label: Text("Harga Jual"),
                             ),
                           ),
                         ),
                         const SizedBox(width: 20),
                         Expanded(child: 
                           TextField(
-                            controller: biayaItemController,
+                            controller: hargaJualController,
                             decoration: const InputDecoration(
-                              label: Text("Biaya"),
+                              label: Text("Harga Jual"),
                             ),
                           ),
                         ),

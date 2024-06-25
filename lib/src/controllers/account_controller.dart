@@ -23,7 +23,7 @@ class AccountController extends GetxController{
     }
   }
 
-  getPersonContact() async {
+  Future<int> getPersonContact() async {
     isLoading.value = true;
     try {
       List resultVendor = await vars.client
@@ -47,23 +47,19 @@ class AccountController extends GetxController{
         mapItem['type'] = 'vendor';
         return mapItem;
       }));
-
-      // if(resultCustomer.isNotEmpty || resultVendor.isNotEmpty){
-      //   listContacts.value = [];
-      //   for(int i = 0; i < resultCustomer.length; i++){
-      //     listContacts.add(resultCustomer[i]);
-      //   }
-      //   for(int i = 0; i < resultVendor.length; i++){
-      //     listContacts.add(resultVendor[i]);
-      //   }
-      // }
-      print("ini result all contact = $listContacts");
-      print("ini result all contact = ${listContacts.length}");
+      
+      int lengthTotal = 0;
+      for (var i = 0; i < listContacts.length; i++) {
+        if(listContacts[i]['deleted'] == false){
+          lengthTotal = lengthTotal + 1;
+        }
+      }
       isLoading.value = false;
+      return lengthTotal;
     } catch (e) {
       print(e);
       isLoading.value = false;
+      return 0;
     }
-    isLoading.value = false;
   }
 }

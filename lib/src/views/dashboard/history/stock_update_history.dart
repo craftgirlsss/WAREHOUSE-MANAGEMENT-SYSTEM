@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:warehouseapp/src/components/appbars/default_appbar.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
 import 'package:warehouseapp/src/components/custom_style/dashed_line.dart';
-import 'package:warehouseapp/src/components/global_variable.dart';
+import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
@@ -45,15 +44,7 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                 ],
               ) : Column(
                   children: List.generate(productControllers.resultUpdateStockHistory.length, (index) {
-                    return Container(
-                      margin: const EdgeInsets.all(5),
-                      width: MediaQuery.of(context).size.width / 2,
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white
-                      ),
-                      child: GestureDetector(
+                    return GestureDetector(
                         onTap: (){
                           // Get.to(() =>  UpdateStockDetail(indexItem: index, idProduct: productControllers.resultInvoice[index]['id']));
                         },
@@ -67,42 +58,32 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(productControllers.resultInvoice[index]['item']['nama'], style: kDefaultTextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              Text(productControllers.resultUpdateStockHistory[index]['item']['nama'] ?? 'Unknown Name', style: kDefaultTextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                               const SizedBox(height: 4),
                               const MySeparator(),
                               const SizedBox(height: 4),
-                              Row(
+                              Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  ElevatedButton.icon(
-                                    onPressed: (){},
-                                    icon: const Icon(CupertinoIcons.calendar, color: Colors.black, size: 20,), 
-                                    label: Column(
-                                      children: [
-                                        const Text("Order"),
-                                        Text(DateFormat('dd/MM/yyyy').format(DateTime.parse(productControllers.resultInvoice[index]['tanggal_order'])), style: kDefaultTextStyle(fontSize: 13),),
-                                      ],
-                                    ),
+                                  Row(
+                                    children: [
+                                      const Text("Transaction Date : "),
+                                      Text(DateFormat('dd/MM/yyyy').format(DateTime.parse(productControllers.resultUpdateStockHistory[index]['transaction_date'] ?? DateTime.now())), style: kDefaultTextStyle(fontSize: 13),),
+                                    ],
                                   ),
-                                  ElevatedButton.icon(
-                                    onPressed: (){},
-                                    icon: const Icon(CupertinoIcons.calendar, color: Colors.black, size: 20,), 
-                                    label: Column(
-                                      children: [
-                                        const Text("Jatuh Tempo"),
-                                        Text(DateFormat('dd/MM/yyyy').format(DateTime.parse(productControllers.resultInvoice[index]['tanggal_tagihan'])), style: kDefaultTextStyle(fontSize: 13),),
-                                      ],
-                                    ),
+                                  Row(
+                                    children: [
+                                      const Text("Menambah stok sebanyak : "),
+                                      Text("${productControllers.resultUpdateStockHistory[index]['jumlah_item_update'].toString()} pcs", style: kDefaultTextStyle(fontSize: 13),),
+                                    ],
                                   ),
-                                  Container(
-                                    color: Colors.transparent,
-                                    child: const Row(
-                                      children: [
-                                        Icon(Icons.arrow_upward, color: Colors.black87, size: 15),
-                                        Text("3.0")
-                                      ]
-                                    ),
-                                  )
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("Notes : "),
+                                      Expanded(child: Text(productControllers.resultUpdateStockHistory[index]['notes'] ?? 'No descriptions', style: kDefaultTextStyle(fontSize: 14, fontWeight: FontWeight.normal),)),
+                                    ],
+                                  ),
                                 ],
                               ),
                               Row(
@@ -112,32 +93,28 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                                     children: [
                                       CircleAvatar(
                                         radius: 14,
-                                        backgroundColor: GlobalVariable.mainColor,
-                                        child: Text(productControllers.resultInvoice[index]['customer']['nama_perusahaan'].toString()[0]),
+                                        backgroundColor: Colors.green,
+                                        child: Text(productControllers.resultUpdateStockHistory[index]['vendor']['nama'].toString()[0].toUpperCase(), style: kDefaultTextStyle(color: Colors.white),),
                                       ),
                                       const SizedBox(width: 5),
-                                      Text(productControllers.resultInvoice[index]['customer']['nama_perusahaan'] ?? 'Unknown')
+                                      Text(productControllers.resultUpdateStockHistory[index]['vendor']['nama'] ?? 'Unknown name')
                                     ],
                                   ),
-                                  if(productControllers.resultInvoice[index]['status'] == 0)
-                                    const Text("Status : Diperjalanan")
-                                  else if(productControllers.resultInvoice[index]['status'] == 1)
-                                    const Text("Status : Diterima")
-                                  else
-                                    const Text("Status : Di Proses")
                                 ],
                               )
                             ],
                           ),
                         ),
-                      )
-                    );
+                      );
                   },)
                 ),
               ),
             ),
           ),
         ),
+        Obx(() => productControllers.isLoading.value == true
+            ? floatingLoading()
+            : const SizedBox()),
       ],
     );
   }

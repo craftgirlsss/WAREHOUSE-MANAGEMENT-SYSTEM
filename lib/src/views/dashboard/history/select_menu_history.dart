@@ -40,15 +40,15 @@ class _SelectHistoryPageState extends State<SelectHistoryPage> {
                             padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: Colors.white
+                              color: Colors.white60
                             ),
                             child: const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Column(
                                 children: [
-                                  Icon(CupertinoIcons.tray_arrow_up_fill, size: 40, color: Colors.black54),
+                                  Icon(CupertinoIcons.tray_arrow_up_fill, size: 40, color: Colors.black),
                                   SizedBox(height: 6),
-                                  Text("Update Stock History", style: TextStyle(fontWeight: FontWeight.bold),)
+                                  Text("Update Stock History", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold),)
                                 ],
                               ),
                             ),
@@ -64,13 +64,13 @@ class _SelectHistoryPageState extends State<SelectHistoryPage> {
                             padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: Colors.white
+                              color: Colors.white60
                             ),
                             child: const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Column(
                                 children: [
-                                  Icon(CupertinoIcons.tray_arrow_down_fill, size: 40, color: Colors.black54),
+                                  Icon(CupertinoIcons.tray_arrow_down_fill, size: 40, color: Colors.black),
                                   SizedBox(height: 6),
                                   Text("Order History", style: TextStyle(fontWeight: FontWeight.bold))
                                 ],

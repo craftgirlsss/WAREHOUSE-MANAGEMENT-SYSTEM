@@ -62,8 +62,6 @@ class _MainPageState extends State<MainPage> {
               },
               icon: const Icon(Icons.add, color: Colors.white),
             )
-          else if(selectedIndex == 5)
-            IconButton(onPressed: (){}, icon: const Icon(Icons.filter_alt_rounded, color: Colors.white))
           else 
             const SizedBox()
         ],

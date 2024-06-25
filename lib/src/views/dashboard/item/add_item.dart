@@ -9,7 +9,8 @@ import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 import 'package:warehouseapp/src/views/dashboard/settings/add_category.dart';
 
 class AddItems extends StatefulWidget {
-  const AddItems({super.key});
+  final bool? editItem;
+  const AddItems({super.key, this.editItem});
 
   @override
   State<AddItems> createState() => _AddItemsState();

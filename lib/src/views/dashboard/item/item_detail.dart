@@ -18,10 +18,10 @@ class ItemDetail extends StatefulWidget {
   final int? stockLength;
   final String? category;
   final int? sellingPrice;
-  final double? costPrice;
+  final int? hargaBeli;
   final String? sku;
   final String? penerbit;
-  const ItemDetail({super.key, this.title, this.stockLength, this.category, this.sellingPrice, this.costPrice, this.sku, this.penerbit, this.idCategory, this.id});
+  const ItemDetail({super.key, this.title, this.stockLength, this.category, this.sellingPrice, this.hargaBeli, this.sku, this.penerbit, this.idCategory, this.id});
 
   @override
   State<ItemDetail> createState() => _ItemDetailState();
@@ -32,6 +32,7 @@ class _ItemDetailState extends State<ItemDetail> {
   
   @override
   Widget build(BuildContext context) {
+    print(widget.hargaBeli);
     final List<ChartData> chartData = [
       ChartData(DateTime.parse("2023-04-13"), 0),
       ChartData(DateTime.parse("2023-05-12"), 9),
@@ -91,7 +92,7 @@ class _ItemDetailState extends State<ItemDetail> {
                     Get.to(() => EditItem(
                       id: widget.id,
                       idCategory: widget.idCategory,
-                      biayaItem: widget.costPrice,
+                      hargaJual: widget.hargaBeli,
                       categoryItem: widget.category,
                       hargaPenjualanItem: widget.sellingPrice,
                       namaItem: widget.title,
@@ -134,7 +135,7 @@ class _ItemDetailState extends State<ItemDetail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Category : ${widget.category ?? "Unknown"}"),
-                        const Text("Reorder Point : 2"),
+                        Text("Penerbit : ${widget.penerbit}"),
                         Text("SKU# : ${widget.sku}"),
                       ],
                     ),
@@ -152,7 +153,7 @@ class _ItemDetailState extends State<ItemDetail> {
                       children: [
                         Text("Harga Jual : ${formatCurrencyId.format(widget.sellingPrice ?? 0)}"),
                         const SizedBox(height: 5),
-                        Text("Harga Beli : ${formatCurrencyId.format(widget.costPrice ?? 0)}"),
+                        Text("Harga Beli : ${formatCurrencyId.format(widget.hargaBeli ?? 0)}"),
                       ],
                     ),
                   ),

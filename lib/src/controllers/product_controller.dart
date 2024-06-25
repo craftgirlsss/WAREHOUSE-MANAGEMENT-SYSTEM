@@ -6,6 +6,7 @@ import 'package:warehouseapp/src/components/global_variable.dart' as vars;
 
 class ProductControllers extends GetxController {
   var isLoading = false.obs;
+  var itemCountLength = 0.obs;
   var itemCountSelected = 0.obs;
   var itemNameSelected = ''.obs;
   var notesitemSelected = ''.obs;
@@ -22,6 +23,7 @@ class ProductControllers extends GetxController {
   var id = vars.client.auth.currentUser?.id;
   var totalSoldQuantities = 0.obs;
   var totalPurcashedQuantities = 0.obs;
+  
 
   Future<bool> deleteItems(int id)async{
     try {
@@ -128,8 +130,15 @@ class ProductControllers extends GetxController {
       List? result = await vars.client
           .from('item')
           .select('*, kategori(*)');
+      print(result);
       if(result.isNotEmpty){
         productModels.value = result.map((e) => ProductModels.fromJson(e)).toList();
+        itemCountLength.value = 0;
+        for(int i = 0; i<productModels.length; i++){
+          if(productModels[i].deleted == false){
+            itemCountLength.value = itemCountLength.value + 1;
+          }
+        }
         isLoading.value = false;
         return true;
       }
