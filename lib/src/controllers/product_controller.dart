@@ -157,6 +157,7 @@ class ProductControllers extends GetxController {
     String? penerbit,
     int? openingStock,
     String? namaPenerbitItem,
+    int? hargaBeli,
     int? category
   }) async {
     isLoading.value = true;
@@ -168,6 +169,7 @@ class ProductControllers extends GetxController {
             'jumlah_stock_saat_ini' : openingStock,
             'penerbit' : penerbit,
             'harga_jual' : hargaPenjaualan,
+            'harga_beli' : hargaBeli,
             'kategori_id' : category
           })
           .select();
@@ -192,27 +194,29 @@ class ProductControllers extends GetxController {
   Future<bool> editProductItems({
     String? namaItem,
     String? sku,
-    int? hargaPenjaualan,
-    int? openingStock,
+    int? hargaJual,
+    int? hargaBeli,
+    int? stok,
     String? namaPenerbitItem,
     int? category,
     int? id
   }) async {
     isLoading.value = true;
     try {
-      List result = await vars.client
+      List? result = await vars.client
           .from('item')
           .update({
             'nama': namaItem,
             'sku' : sku,
-            'stock_awal' : openingStock,
+            'harga_beli' : hargaBeli,
+            'jumlah_stock_saat_ini' : stok,
             'penerbit' : namaPenerbitItem,
             'kategori_id' : category,
-            'harga_jual' : hargaPenjaualan
+            'harga_jual' : hargaJual
           })
           .eq('id', id!)
           .select();
-      // print(result);
+      print("ini result update item $result");
       isLoading.value = false;
       return true;
     } catch (e) {
@@ -442,7 +446,7 @@ class ProductControllers extends GetxController {
   }) async {
     isLoading(true);
     try {
-      List result = await vars.client.from('invoice_order').insert(
+      List? result = await vars.client.from('invoice_order').insert(
         {
           'invoice_kode' : invoiceKode,
           'item_id' : itemID,
@@ -457,7 +461,33 @@ class ProductControllers extends GetxController {
           'total_tagihan' : totalTagihan
           }
         ).select();
-      if(result.length == 0){
+
+      print(result);
+      List? getTotalStockBuku = await vars.client.from('item').select('jumlah_stock_saat_ini').eq('id', itemID!).limit(1);
+      print(getTotalStockBuku);
+      int totalStockAfterOrder = 0;
+      totalStockAfterOrder = getTotalStockBuku[0]['jumlah_stock_saat_ini'] - jumlahBuku;
+      print(totalStockAfterOrder);
+      List? reesultUpdatStok = await vars.client.from('item').update({
+        'jumlah_stock_saat_ini' : totalStockAfterOrder
+      }).eq('id', itemID).select();
+      print(reesultUpdatStok);
+
+      // print(reesultUpdatStok);
+      // List? resultGetStock = await vars.client.from('item').select('jumlah_stock_saat_ini').eq('id', itemID!).limit(1);
+      // print(resultGetStock);
+
+      // int jumlahStockSaatIni = resultGetStock[0]['jumlah_stock_saat_ini'];
+
+      // var totalStock = jumlahStockSaatIni - result[0]['jumlah_buku'];
+
+      // List? updateStock = await vars.client.from('item').update({
+      //   'jumlah_stock_saat_ini' : totalStock
+      // }).select('jumlah_stock_saat_ini').select();
+
+      // print(updateStock);
+        
+      if(result.isEmpty){
         return false;
       }
       print(result);
@@ -478,7 +508,7 @@ class ProductControllers extends GetxController {
           .from('invoice_order')
           .select('*, item(*, kategori(*)), customer(*)');
       // print(resultData);
-      print("ini length invoice models = ${resultData.length}");
+      print("ini invoice models = $resultData");
       resultInvoice.value = resultData;
       if(resultData.isEmpty){
         print("masuk ke isempty");
@@ -515,6 +545,57 @@ class ProductControllers extends GetxController {
     }
     isLoading.value = false;
     return false;
+  }
+
+  Future<int?> scanningQRCode({
+    String? nomorResi
+  }) async {
+    isLoading.value = true;
+    try {
+      List? resultCheckStatus = await vars.client
+          .from('invoice_order')
+          .select('status')
+          .eq('nomor_resi', nomorResi!)
+          .limit(1);
+
+      print(resultCheckStatus);
+      isLoading.value = false;
+      if(resultCheckStatus.isEmpty){
+        return -2;
+      }
+      return resultCheckStatus[0]['status'];
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+      return null;
+    }
+  }
+
+  var productResult = [].obs;
+  Future<bool> selectProduct({
+    int? id
+  }) async {
+    isLoading.value = true;
+    try {
+      List? resultProduct = await vars.client
+          .from('item, kategori(*)')
+          .select('*')
+          .eq('id', id!)
+          .limit(1);
+
+
+      print(resultProduct);
+      isLoading.value = false;
+      if(resultProduct.isEmpty){
+        return false;
+      }
+      productResult.value = resultProduct;        
+      return true;
+    } catch (e) {
+      print(e);
+      isLoading.value = false;
+      return false;
+    }
   }
 }
 

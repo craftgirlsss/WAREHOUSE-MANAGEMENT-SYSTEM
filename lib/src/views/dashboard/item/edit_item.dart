@@ -15,9 +15,9 @@ class EditItem extends StatefulWidget {
   final int? openingStockItem;
   final String? namaPenerbitItem;
   final String? categoryItem;
-  final int? hargaPenjualanItem;
+  final int? hargaBeli;
   final int? hargaJual;
-  const EditItem({super.key, this.namaItem, this.skuItem, this.openingStockItem, this.namaPenerbitItem, this.categoryItem, this.hargaPenjualanItem, this.hargaJual, this.idCategory, this.id});
+  const EditItem({super.key, this.namaItem, this.skuItem, this.openingStockItem, this.namaPenerbitItem, this.categoryItem, this.hargaBeli, this.hargaJual, this.idCategory, this.id});
 
   @override
   State<EditItem> createState() => _EditItemState();
@@ -27,11 +27,11 @@ class _EditItemState extends State<EditItem> {
   ProductControllers productControllers = Get.find();
   TextEditingController namaItemController = TextEditingController();
   TextEditingController skuItemController = TextEditingController();
-  TextEditingController openingStockItemController = TextEditingController();
+  TextEditingController stok = TextEditingController();
   TextEditingController namaPenerbitItemController = TextEditingController();
   TextEditingController categoryItemController = TextEditingController();
-  TextEditingController hargaPenjualanItemController = TextEditingController();
-  TextEditingController hargaJualController = TextEditingController();
+  TextEditingController hargaBeliItem = TextEditingController();
+  TextEditingController hargaJualItem = TextEditingController();
   int? categoryID;
 
   @override
@@ -40,22 +40,22 @@ class _EditItemState extends State<EditItem> {
     categoryID = widget.idCategory;
     namaItemController.text = widget.namaItem ?? 'Unknown';
     skuItemController.text = widget.skuItem ?? 'Unknown';
-    openingStockItemController.text = widget.openingStockItem.toString();
+    stok.text = widget.openingStockItem.toString();
     namaPenerbitItemController.text = widget.namaPenerbitItem ?? 'Unknown';
     categoryItemController.text = widget.categoryItem ?? 'Unknown';
-    hargaPenjualanItemController.text = widget.hargaPenjualanItem.toString();
-    hargaJualController.text = widget.hargaJual != null ? widget.hargaJual!.toInt().toString() : '';
+    hargaBeliItem.text = widget.hargaBeli.toString();
+    hargaJualItem.text = widget.hargaJual != null ? widget.hargaJual!.toInt().toString() : '';
   }
 
   @override
   void dispose() {
     namaItemController.dispose();
     skuItemController.dispose();
-    openingStockItemController.dispose();
+    stok.dispose();
     namaPenerbitItemController.dispose();
     categoryItemController.dispose();
-    hargaPenjualanItemController.dispose();
-    hargaJualController.dispose();
+    hargaBeliItem.dispose();
+    hargaJualItem.dispose();
     super.dispose();
   }
   @override
@@ -86,10 +86,11 @@ class _EditItemState extends State<EditItem> {
                     onPressed: () async {
                     if(await productControllers.editProductItems(
                       category: categoryID,
-                      hargaPenjaualan: int.parse(hargaPenjualanItemController.text),
+                      hargaBeli: int.parse(hargaBeliItem.text),
+                      hargaJual: int.parse(hargaJualItem.text),
                       namaItem: namaItemController.text,
                       namaPenerbitItem: namaPenerbitItemController.text,
-                      openingStock: int.parse(openingStockItemController.text),
+                      stok: int.parse(stok.text),
                       id: widget.id,
                       sku: skuItemController.text
                     )){
@@ -131,7 +132,7 @@ class _EditItemState extends State<EditItem> {
                           ),
                         ),
                         TextField(
-                          controller: openingStockItemController,
+                          controller: stok,
                           decoration: const InputDecoration(
                             label: Text("Stock"),
                           ),
@@ -219,16 +220,16 @@ class _EditItemState extends State<EditItem> {
                       children: [
                         Expanded(child: 
                           TextField(
-                            controller: hargaPenjualanItemController,
+                            controller: hargaBeliItem,
                             decoration: const InputDecoration(
-                              label: Text("Harga Jual"),
+                              label: Text("Harga Beli"),
                             ),
                           ),
                         ),
                         const SizedBox(width: 20),
                         Expanded(child: 
                           TextField(
-                            controller: hargaJualController,
+                            controller: hargaJualItem,
                             decoration: const InputDecoration(
                               label: Text("Harga Jual"),
                             ),

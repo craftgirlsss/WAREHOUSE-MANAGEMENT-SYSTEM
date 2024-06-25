@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Form(
                       child: Column(
                         children: [
-                          Image.asset("assets/icons/ic_launcher.png", width: 150),
+                          Image.asset("assets/icons/icon_revisi.png", width: 100, height: 100,),
                           const SizedBox(height: 30),
                           EmailTextField(
                             controller: emailController,
@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                                 backgroundColor: GlobalVariable.buttonColor,
                                 onPressed: accountController.isLoading.value == true ? (){} : () async {
                                   if(await accountController.fetchLogin(email: emailController.text, password: passwordController.text) == true){
-                                    Get.to(() => const LoadingPage());
+                                    Get.offAll(() => const LoadingPage());
                                   }else{
                                     Get.snackbar("Gagal", "Gagal login");
                                   }

@@ -127,10 +127,10 @@ class _MainPageState extends State<MainPage> {
             ListTile(
               tileColor: selectedIndex == 2 ? Colors.white12 : Colors.transparent,
               leading: const Icon(CupertinoIcons.cube_box, color: Colors.white, size: 30),
-              title: Text('Sales Order', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+              title: Text('Order', style: kDefaultTextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
               onTap: () {
                 setState(() {
-                  nameAppBar = "Sales Order";
+                  nameAppBar = "Order";
                   onItemTapped(2);
                   Navigator.pop(context);
                 });

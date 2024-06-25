@@ -229,7 +229,7 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                               productControllers.priceBook.value = 0;
                               productControllers.idItemSelected.value = 0;
                               vendorID = null;
-                              Get.snackbar("Berhasil", "Berhasil menambah stok buku");
+                              Get.snackbar("Berhasil", "Berhasil menambah stok buku", backgroundColor: Colors.white);
                             }
                           }
                       },

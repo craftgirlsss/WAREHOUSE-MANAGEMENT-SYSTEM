@@ -24,6 +24,7 @@ class _ContactPageState extends State<ContactPage> {
 
   @override
   void initState() {
+    accountController.getPersonContact();
     super.initState();
   }
 
@@ -38,7 +39,7 @@ class _ContactPageState extends State<ContactPage> {
             backgroundColor: Colors.transparent,
             body: RefreshIndicator(
               onRefresh: ()async{
-                await accountController.getPersonContact();
+                accountController.getPersonContact();
                 setState(() {});
               },
               child: Obx(

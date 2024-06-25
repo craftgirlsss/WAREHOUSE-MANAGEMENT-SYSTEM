@@ -73,6 +73,7 @@ class _AddItemsState extends State<AddItems> {
                       }else{
                         if(await productControllers.addProductItems(
                           category: categorySelected,
+                          hargaBeli: int.parse(hargaBeliItemController.text),
                           hargaPenjaualan: int.parse(hargaPenjualanItemController.text),
                           namaItem: namaItemController.text,
                           namaPenerbitItem: namaPenerbitItemController.text,
@@ -96,38 +97,6 @@ class _AddItemsState extends State<AddItems> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 20),
-                  // Center(
-                  //   child: Container(
-                  //     color: Colors.transparent,
-                  //     child: Stack(
-                  //       children: [
-                  //         Container(
-                  //           width: 100,
-                  //           height: 100,
-                  //           decoration: const BoxDecoration(
-                  //             shape: BoxShape.circle,
-                  //             image: DecorationImage(image: AssetImage('assets/images/empty_image.png'), fit: BoxFit.cover)
-                  //           ),
-                  //         ),
-                  //         Positioned(
-                  //           right: 0,
-                  //           bottom: 0,
-                  //           child: GestureDetector(
-                  //             onTap: (){},
-                  //             child: Container(
-                  //               padding: const EdgeInsets.all(5),
-                  //               decoration: const BoxDecoration(
-                  //                 color: Colors.white,
-                  //                 shape: BoxShape.circle
-                  //               ),
-                  //               child: const Icon(CupertinoIcons.camera_fill, color: Colors.black54),
-                  //             ),
-                  //           ))
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 30),
                   Container(
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
@@ -146,7 +115,7 @@ class _AddItemsState extends State<AddItems> {
                           keyboardType: TextInputType.number,
                           controller: openingStockItemController,
                           decoration: const InputDecoration(
-                            label: Text("Opening Stock"),
+                            label: Text("Jumlah Stok"),
                           ),
                         ),
                         TextField(

@@ -61,7 +61,7 @@ class _AddingContactPageState extends State<AddingContactPage> {
                       }
                     }else if(dataperson == Dataperson.vendor){
                       if(await customerController.addVendor(
-                        nama: contactNameController.text, phone: contactNameController.text)){
+                        nama: contactNameController.text, phone: contactNumberController.text)){
                         Get.snackbar('Berhsil', "Berhasil menambah kontak vendor", backgroundColor: Colors.white);
                         Future.delayed(Duration.zero, ()async{
                           await accountController.getPersonContact();
@@ -112,6 +112,7 @@ class _AddingContactPageState extends State<AddingContactPage> {
                       ),
                       const SizedBox(height: 15),
                       TextField(
+                        keyboardType: TextInputType.phone,
                         controller: contactNumberController,
                         decoration: InputDecoration(
                           label: Text("Phone Number", style: kDefaultTextStyle(fontSize: 16),),

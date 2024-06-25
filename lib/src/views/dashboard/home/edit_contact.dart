@@ -72,6 +72,7 @@ class _EditContactPageState extends State<EditContactPage> {
                     await customerController.updateCustomer(id: widget.id, name: contactNameController.text, phone: contactNumberController.text).then((value) {
                       if(value){
                         Get.snackbar("Berhasil", "Berhasil update kontak", backgroundColor: Colors.white);
+                        
                         Navigator.pop(context);
                       }else{
                         Get.snackbar("Gagal", "Gagal update kontak", backgroundColor: Colors.white);

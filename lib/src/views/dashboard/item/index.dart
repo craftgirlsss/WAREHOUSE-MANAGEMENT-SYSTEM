@@ -68,17 +68,10 @@ class _ItemsPageState extends State<ItemsPage> {
                 ) : CustomScrollView(
                   slivers: [
                     SliverList.builder(
-                      itemCount: productControllers.itemCountLength.value,
+                      itemCount: productControllers.productModels.length,
                       itemBuilder: (context, index){
-                        if(productControllers.itemCountLength.value == 0){
-                          return Center(
-                            child: Container(
-                              color: Colors.transparent,
-                              width: double.infinity,
-                              height: double.infinity,
-                              child: const Text("Tidak ada data buku", style: TextStyle(color: Colors.white),),
-                            ),
-                          );
+                        if(productControllers.productModels[index].deleted == true){
+                          return Container();
                         }
                         return Padding(
                           padding: const EdgeInsets.all(8.0),

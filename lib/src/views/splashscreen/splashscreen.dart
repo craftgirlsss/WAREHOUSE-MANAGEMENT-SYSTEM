@@ -23,9 +23,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     Future.delayed(const Duration(seconds: 3), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if(prefs.getBool('loggedIn') == true){
-        Get.off(() => const MainPage());
+        Get.offAll(() => const MainPage());
       }else{
-        Get.off(() => const LoginPage());
+        Get.offAll(() => const LoginPage());
       }
     });
   }

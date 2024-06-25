@@ -29,6 +29,12 @@ class ItemDetail extends StatefulWidget {
 
 class _ItemDetailState extends State<ItemDetail> {
   ProductControllers productControllers = Get.find();
+
+  @override
+  void initState() {
+    // productControllers.selectProduct(id: widget.id);
+    super.initState();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -92,9 +98,9 @@ class _ItemDetailState extends State<ItemDetail> {
                     Get.to(() => EditItem(
                       id: widget.id,
                       idCategory: widget.idCategory,
-                      hargaJual: widget.hargaBeli,
+                      hargaJual: widget.sellingPrice,
                       categoryItem: widget.category,
-                      hargaPenjualanItem: widget.sellingPrice,
+                      hargaBeli: widget.hargaBeli,
                       namaItem: widget.title,
                       namaPenerbitItem: widget.penerbit ?? 'Unknown',
                       openingStockItem: widget.stockLength,
@@ -121,7 +127,7 @@ class _ItemDetailState extends State<ItemDetail> {
                       child: const Icon(Icons.image_outlined, color: Colors.black87, size: 40,)
                     ),
                     title: Text(widget.title ?? "Unknown", overflow: TextOverflow.ellipsis, style: kDefaultTextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
-                    subtitle: Text("Available Stock : ${widget.stockLength ?? 0}")
+                    subtitle: Text("Jumlah Stok : ${widget.stockLength ?? 0}")
                   ),
                   const SizedBox(height: 10),
                   Container(
@@ -134,9 +140,9 @@ class _ItemDetailState extends State<ItemDetail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Category : ${widget.category ?? "Unknown"}"),
-                        Text("Penerbit : ${widget.penerbit}"),
-                        Text("SKU# : ${widget.sku}"),
+                        Text("Kategori : ${widget.category ?? "Unknown"}"),
+                        Text("Penerbit : ${widget.penerbit ?? '-'}"),
+                        Text("SKU# : ${widget.sku ?? '-'}"),
                       ],
                     ),
                   ),

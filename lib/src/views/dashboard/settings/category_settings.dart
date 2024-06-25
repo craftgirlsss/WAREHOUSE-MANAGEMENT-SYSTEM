@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:warehouseapp/src/components/backgrounds/background_color.dart';
@@ -6,7 +5,6 @@ import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 import 'package:warehouseapp/src/views/dashboard/settings/add_category.dart';
-import 'category_details.dart';
 
 class CategorySettings extends StatefulWidget {
   const CategorySettings({super.key});
@@ -96,9 +94,6 @@ class _CategorySettingsState extends State<CategorySettings> {
                                   }, child: const Text("Tidak")),
                                 ]
                               );
-                            },
-                            onTap: () {
-                              Get.to(() => const CategoryDetails());
                             },
                             shape: RoundedRectangleBorder(
                               //<-- SEE HERE

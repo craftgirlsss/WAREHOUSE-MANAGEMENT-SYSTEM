@@ -193,7 +193,7 @@ class CustomerController extends GetxController {
   Future<bool> updateVendor({int? id, String? name, String? phone}) async {
     isLoading(true);
     try {
-      List? result = await vars.client.from('customer').update({
+      List? result = await vars.client.from('vendor').update({
         'nama' : name,
         'no_telp' : phone
       }).eq('id', id!)

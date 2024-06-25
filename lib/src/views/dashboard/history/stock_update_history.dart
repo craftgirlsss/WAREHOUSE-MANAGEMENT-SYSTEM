@@ -7,6 +7,7 @@ import 'package:warehouseapp/src/components/custom_style/dashed_line.dart';
 import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
+import 'package:warehouseapp/src/helpers/currencies/format_currency.dart';
 import 'package:warehouseapp/src/helpers/focus/focus_manager.dart';
 
 class UpdateStockHistoryPage extends StatefulWidget {
@@ -82,6 +83,13 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                                     children: [
                                       const Text("Notes : "),
                                       Expanded(child: Text(productControllers.resultUpdateStockHistory[index]['notes'] ?? 'No descriptions', style: kDefaultTextStyle(fontSize: 14, fontWeight: FontWeight.normal),)),
+                                    ],
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("Harga per item : "),
+                                      Expanded(child: Text(formatCurrencyId.format(productControllers.resultUpdateStockHistory[index]['item']['harga_beli'] ?? 0), style: kDefaultTextStyle(fontSize: 14, fontWeight: FontWeight.normal),)),
                                     ],
                                   ),
                                 ],

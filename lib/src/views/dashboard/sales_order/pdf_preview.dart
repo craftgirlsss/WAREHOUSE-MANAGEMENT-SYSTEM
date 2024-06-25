@@ -10,6 +10,7 @@ import 'package:warehouseapp/src/components/appbars/default_appbar.dart';
 import 'package:warehouseapp/src/components/loadings/loadings.dart';
 import 'package:warehouseapp/src/components/textstyles/default_textstyle.dart';
 import 'package:warehouseapp/src/controllers/product_controller.dart';
+import 'package:warehouseapp/src/views/mainpage.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 
 class PDFPreview extends StatefulWidget {
@@ -289,6 +290,7 @@ class _PDFPreviewState extends State<PDFPreview> {
                     await file.writeAsBytes(this.bytes!, flush: true).then((value) {
                       Get.snackbar("Invoice disimpan", "Invoice telah disimpan di folder Download", backgroundColor: Colors.white);
                       Future.delayed(const Duration(seconds: 2), (){
+                        // Get.off(() => const MainPage());
                         Navigator.pop(context);
                       });
                     });
