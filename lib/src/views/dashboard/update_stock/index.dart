@@ -85,12 +85,15 @@ class _UpdateStockPageState extends State<UpdateStockPage> {
                               ) : SingleChildScrollView(
                                   child: Column(
                                     children: List.generate(
-                                      customerController.listVendor.length + 1, (index) {
-                                        if(index == customerController.listVendor.length){
-                                          return TextButton(onPressed: (){
-                                            Get.to(() => const AddingContactPage());
-                                          }, 
-                                          child: const Text("Tambah Customer"));
+                                      customerController.listVendor.length, (index) {
+                                        // if(index == customerController.listVendor.length){
+                                        //   return TextButton(onPressed: (){
+                                        //     Get.to(() => const AddingContactPage());
+                                        //   }, 
+                                        //   child: const Text("Tambah Customer"));
+                                        // }
+                                        if(customerController.listVendor[index]['deleted'] == true){
+                                          return Container();
                                         }
                                         return Padding(
                                           padding: const EdgeInsets.only(bottom: 5),

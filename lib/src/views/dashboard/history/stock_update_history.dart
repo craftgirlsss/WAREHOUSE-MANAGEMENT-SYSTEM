@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -22,8 +23,8 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
   
   @override
   void initState() {
-    super.initState();
     productControllers.getUpdateStockHistory();
+    super.initState();
   }
 
   @override
@@ -44,8 +45,11 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                   Text("Tidak ada riwayat")
                 ],
               ) : Column(
-                  children: List.generate(productControllers.resultUpdateStockHistory.length, (index) {
-                    return GestureDetector(
+                  children: List.generate(
+                    productControllers.resultUpdateStockHistory.length, (index) {
+                    return 
+                    // Text(productControllers.resultUpdateStockHistory[index]['notes']);
+                    GestureDetector(
                         onTap: (){
                           // Get.to(() =>  UpdateStockDetail(indexItem: index, idProduct: productControllers.resultInvoice[index]['id']));
                         },
@@ -59,7 +63,7 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(productControllers.resultUpdateStockHistory[index]['item']['nama'] ?? 'Unknown Name', style: kDefaultTextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              Obx(() => Text(productControllers.resultUpdateStockHistory[index]['item']['nama'] ?? 'Unknown Name', style: kDefaultTextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
                               const SizedBox(height: 4),
                               const MySeparator(),
                               const SizedBox(height: 4),
@@ -69,27 +73,27 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                                   Row(
                                     children: [
                                       const Text("Transaction Date : "),
-                                      Text(DateFormat('dd/MM/yyyy').format(DateTime.parse(productControllers.resultUpdateStockHistory[index]['transaction_date'] ?? DateTime.now())), style: kDefaultTextStyle(fontSize: 13),),
+                                      Obx(() => Text(DateFormat('dd/MM/yyyy').format(DateTime.parse(productControllers.resultUpdateStockHistory[index]['transaction_date'] ?? DateTime.now())), style: kDefaultTextStyle(fontSize: 13),)),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       const Text("Menambah stok sebanyak : "),
-                                      Text("${productControllers.resultUpdateStockHistory[index]['jumlah_item_update'].toString()} pcs", style: kDefaultTextStyle(fontSize: 13),),
+                                      Obx(() => Text("${productControllers.resultUpdateStockHistory[index]['jumlah_item_update'].toString()} pcs", style: kDefaultTextStyle(fontSize: 13),)),
                                     ],
                                   ),
                                   Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const Text("Notes : "),
-                                      Expanded(child: Text(productControllers.resultUpdateStockHistory[index]['notes'] ?? 'No descriptions', style: kDefaultTextStyle(fontSize: 14, fontWeight: FontWeight.normal),)),
+                                      Expanded(child: Obx(() => Text(productControllers.resultUpdateStockHistory[index]['notes'] ?? 'No descriptions', style: kDefaultTextStyle(fontSize: 14, fontWeight: FontWeight.normal),))),
                                     ],
                                   ),
                                   Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const Text("Harga per item : "),
-                                      Expanded(child: Text(formatCurrencyId.format(productControllers.resultUpdateStockHistory[index]['item']['harga_beli'] ?? 0), style: kDefaultTextStyle(fontSize: 14, fontWeight: FontWeight.normal),)),
+                                      Expanded(child: Obx(() => Text(formatCurrencyId.format(productControllers.resultUpdateStockHistory[index]['item']['harga_beli'] ?? 0), style: kDefaultTextStyle(fontSize: 14, fontWeight: FontWeight.normal),))),
                                     ],
                                   ),
                                 ],
@@ -97,15 +101,15 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
+                                  Row( 
                                     children: [
-                                      CircleAvatar(
+                                      const CircleAvatar(
                                         radius: 14,
                                         backgroundColor: Colors.green,
-                                        child: Text(productControllers.resultUpdateStockHistory[index]['vendor']['nama'].toString()[0].toUpperCase(), style: kDefaultTextStyle(color: Colors.white),),
+                                        child: Icon(CupertinoIcons.person, size: 18,),
                                       ),
                                       const SizedBox(width: 5),
-                                      Text(productControllers.resultUpdateStockHistory[index]['vendor']['nama'] ?? 'Unknown name')
+                                      Obx(() => Text(productControllers.resultUpdateStockHistory[index]['vendor']['nama'] ?? 'Unknown name'))
                                     ],
                                   ),
                                 ],
@@ -114,7 +118,8 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                           ),
                         ),
                       );
-                  },)
+                    },
+                  )
                 ),
               ),
             ),

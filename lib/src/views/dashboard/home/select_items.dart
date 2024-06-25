@@ -52,6 +52,7 @@ class _SelectItemsState extends State<SelectItems> {
                 ) : CustomScrollView(
                     slivers: [
                       SliverAppBar(
+                        pinned: true,
                         backgroundColor: Colors.indigo.shade800,
                         title: Text("Select Items", style: kDefaultTextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                         leading: IconButton(
@@ -105,6 +106,9 @@ class _SelectItemsState extends State<SelectItems> {
                       SliverList.builder(
                         itemCount: productControllers.productModels.length,
                         itemBuilder: (context, index){
+                          if(productControllers.productModels[index].deleted == true){
+                            return Container();
+                          }
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Obx(() => SelectAndAddItems(

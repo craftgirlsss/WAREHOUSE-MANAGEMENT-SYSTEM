@@ -84,18 +84,27 @@ class ProductControllers extends GetxController {
             }
           ])
           .select();
-      // print(resultUpdateStock);
+          print(resultUpdateStock);
+          List? getTotalStockBuku = await vars.client.from('item').select('jumlah_stock_saat_ini').eq('id', itemID!).limit(1);
+          print(getTotalStockBuku);
+          int totalStockAfterOrder = 0;
+          totalStockAfterOrder = getTotalStockBuku[0]['jumlah_stock_saat_ini'] + jumlahItem;
+          print(totalStockAfterOrder);
+          List? reesultUpdatStok = await vars.client.from('item').update({
+            'jumlah_stock_saat_ini' : totalStockAfterOrder
+          }).eq('id', itemID).select();
+          print(reesultUpdatStok);
       
-      List? resultUpdateStockItem = await vars.client
-          .from('item')
-          .insert([
-            {
-              'item_id' : itemID,
-              'jumlah_stock_saat_ini' : jumlahItem
-            }
-          ])
-          .select();
-      // print(resultUpdateStockItem);
+      // List? resultUpdateStockItem = await vars.client
+      //     .from('item')
+      //     .insert([
+      //       {
+      //         'item_id' : itemID,
+      //         'jumlah_stock_saat_ini' : jumlahItem
+      //       }
+      //     ])
+      //     .select();
+      // // print(resultUpdateStockItem);
       isLoading.value = false;
       return true;
     } catch (e) {

@@ -84,16 +84,7 @@ class _UpdateStockDetailState extends State<UpdateStockDetail> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text("Stock Flow"),
-                                    Container(
-                                      color: Colors.transparent,
-                                      child: const Row(
-                                        children: [
-                                          Icon(Icons.arrow_upward, color: Colors.black87, size: 15),
-                                          Text("3.0"),
-                                        ]
-                                      ),
-                                    ),
+                                    const Text("Stock Details", style: TextStyle(fontWeight: FontWeight.bold),),
                                     Text("Tanggal Order : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(productControllers.resultInvoice[widget.indexItem!]['tanggal_order']))}")
                                   ],
                                 ),
@@ -113,7 +104,9 @@ class _UpdateStockDetailState extends State<UpdateStockDetail> {
                           const SizedBox(height: 4),
                           const MySeparator(),
                           const SizedBox(height: 4),
-                          Text("No. PO : ${productControllers.resultInvoice[widget.indexItem!]['nomor_po']}"),
+                          Obx(() => Text("No. PO : ${productControllers.resultInvoice[widget.indexItem!]['nomor_po'] ?? ''}")),
+                          Obx(() => Text("No. Resi : ${productControllers.resultInvoice[widget.indexItem!]['nomor_resi'] ?? ''}")),
+                          Obx(() => Text("ID Transaksi : #${productControllers.resultInvoice[widget.indexItem!]['invoice_kode'] ?? ''}")),
                         ],
                       ),
                     ),

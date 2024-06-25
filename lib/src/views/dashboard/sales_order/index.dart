@@ -436,11 +436,11 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                           totalPembayaran: formatCurrencyId.format((hargaBuku * int.parse(jumlahBuku.text)) + int.parse(realCurrency!)),
                           totalSemua: formatCurrencyId.format((hargaBuku * int.parse(jumlahBuku.text)) + int.parse(realCurrency!) + 6500),
                         ));
-                        namaBuku.clear();
-                        nomorResiController.clear();
-                        jumlahBuku.clear();
-                        totalStockBukuIni = 0;
-                        tarif.clear();
+                        // namaBuku.clear();
+                        // nomorResiController.clear();
+                        // jumlahBuku.clear();
+                        // totalStockBukuIni = 0;
+                        // tarif.clear();
                       }
                     },
                     title: "Print",
