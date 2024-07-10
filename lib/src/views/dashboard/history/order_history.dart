@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -98,13 +99,13 @@ class _OrderHistoryState extends State<OrderHistory> {
                             children: [
                               Row(
                                 children: [
-                                  CircleAvatar(
+                                  const CircleAvatar(
                                     radius: 14,
                                     backgroundColor: Colors.green,
-                                    child: Text(productControllers.resultInvoice[index]['customer']['nama_perusahaan'].toString()[0].toUpperCase(), style: const TextStyle(color: Colors.white),),
+                                    child: Icon(CupertinoIcons.person, size: 18, color: Colors.black,),
                                   ),
                                   const SizedBox(width: 5),
-                                  Text(productControllers.resultInvoice[index]['customer']['nama_perusahaan'] ?? 'Unknown', style: kDefaultTextStyle(color: Colors.black),)
+                                  Text(productControllers.resultInvoice[index]['customer']['nama'] ?? 'Unknown', style: kDefaultTextStyle(color: Colors.black),)
                                 ],
                               ),
                               if(productControllers.resultInvoice[index]['status'] == 0)

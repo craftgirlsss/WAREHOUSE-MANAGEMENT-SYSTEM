@@ -32,6 +32,7 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
   TextEditingController jumlahBuku = TextEditingController();
   TextEditingController tarif = TextEditingController();
   String? realCurrency;
+  bool validated = false;
   int? customerID;
   int? itemID;
   static const _locale = 'id';
@@ -291,6 +292,12 @@ class _SalesOrderPageState extends State<SalesOrderPage> {
                             }
                           },
                           decoration: InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: validated ? Colors.black : Colors.red)),
+                            focusedErrorBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.red)),
+                            errorBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.red)),
                             focusedBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black)),
                             label: Text("Jumlah Buku", style: kDefaultTextStyle(fontSize: 16),),

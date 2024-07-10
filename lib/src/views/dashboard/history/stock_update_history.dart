@@ -109,7 +109,7 @@ class _UpdateStockHistoryPageState extends State<UpdateStockHistoryPage> {
                                         child: Icon(CupertinoIcons.person, size: 18,),
                                       ),
                                       const SizedBox(width: 5),
-                                      Obx(() => Text(productControllers.resultUpdateStockHistory[index]['vendor']['nama'] ?? 'Unknown name'))
+                                      Obx(() => Text(productControllers.resultUpdateStockHistory[index]['vendor']['nama'] ?? 'Unknown name', style: const TextStyle(fontWeight: FontWeight.bold),))
                                     ],
                                   ),
                                 ],
